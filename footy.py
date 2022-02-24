@@ -36,7 +36,11 @@ except:
 
 headers = { 'X-Auth-Token': api_key }
 
-response = requests.get(f'https://api.football-data.org//v2/teams/64/matches/?status=FINISHED&dateFrom={date.today() - timedelta(weeks=1)}&dateTo={date.today()}', headers=headers)
+try:
+    response = requests.get(f'https://api.football-data.org//v2/teams/64/matches/?status=FINISHED&dateFrom={date.today() - timedelta(weeks=1)}&dateTo={date.today()}', headers=headers)
+except:
+    print('Could not download data')
+    sys.exit()
 
 if response.status_code == requests.codes.ok:
     data = response.json()
