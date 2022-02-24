@@ -36,7 +36,7 @@ except:
 
 headers = { 'X-Auth-Token': api_key }
 
-response = requests.get('http://api.football-data.org//v2/teams/64/matches/', headers=headers)
+response = requests.get('https://api.football-data.org//v2/teams/64/matches/', headers=headers)
 
 if response.status_code == requests.codes.ok:
     data = response.json()
