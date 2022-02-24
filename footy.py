@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import date, datetime, timedelta
 from pathlib import Path
 import sys
 from typing import Any
@@ -36,7 +36,7 @@ except:
 
 headers = { 'X-Auth-Token': api_key }
 
-response = requests.get('https://api.football-data.org//v2/teams/64/matches/', headers=headers)
+response = requests.get(f'https://api.football-data.org//v2/teams/64/matches/?status=FINISHED&dateFrom={date.today() - timedelta(weeks=1)}&dateTo={date.today()}', headers=headers)
 
 if response.status_code == requests.codes.ok:
     data = response.json()
