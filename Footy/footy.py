@@ -10,8 +10,8 @@ class Match:
     def __init__(self, matchData: dict[str, Any]) -> None:
         self.homeTeam = matchData['homeTeam']['name']
         self.awayTeam = matchData['awayTeam']['name']
-        self.homeScore = matchData['score']['fullTime']['homeTeam'] if matchData['score']['fullTime']['homeTeam'] is not None else "TBD"
-        self.awayScore = matchData['score']['fullTime']['awayTeam'] if matchData['score']['fullTime']['awayTeam'] is not None else "TBD"
+        self.homeScore = matchData['score']['fullTime']['homeTeam'] if matchData['score']['fullTime']['homeTeam'] is not None else 'TBD'
+        self.awayScore = matchData['score']['fullTime']['awayTeam'] if matchData['score']['fullTime']['awayTeam'] is not None else 'TBD'
         matchDate = parse(matchData['utcDate'])
         if matchDate is None:
             self.matchDate = datetime(1900, 1, 1)
