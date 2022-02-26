@@ -43,9 +43,6 @@ class BanterBot:
 
         self.logger = logging.getLogger(__name__)
 
-        # Create the Updater and pass it your bot's token.
-        # Make sure to set use_context=True to use the new context based callbacks
-        # Post version 12 this will no longer be necessary
         try:
             # Get the token from the bot_token.txt file, this is exclued from git, so may not exist
             with open(Path('bot_token.txt'), 'r', encoding='utf8') as secretFile:
@@ -61,7 +58,9 @@ class BanterBot:
         # Create a Footy object using the list of teams we're interested in
         self.footy = Footy(self.teams)
 
-        # Create the updater
+        # Create the Updater and pass it your bot's token.
+        # Make sure to set use_context=True to use the new context based callbacks
+        # Post version 12 this will no longer be necessary
         self.updater = Updater(token, use_context=True)
 
         # Get the dispatcher to register handlers
