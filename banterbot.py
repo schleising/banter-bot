@@ -138,9 +138,9 @@ class BanterBot:
                     print(f'{newMatchData}')
 
                 if newMatchData.status not in ['FINISHED', 'POSTPONED']:
-                    # Add a job to check the scores again in a minute
+                    # Add a job to check the scores again in 20 seconds
                     matchContext = newMatchData
-                    self.jq.run_once(self.SendScoreUpdates, 60, context=matchContext)
+                    self.jq.run_once(self.SendScoreUpdates, 20, context=matchContext)
                 elif oldMatchData.status not in ['FINISHED', 'POSTPONED']:
                     # Send the final score
                     context.bot.send_message(chat_id=CHAT_ID, text=f'{newMatchData}')
