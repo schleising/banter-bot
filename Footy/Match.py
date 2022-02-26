@@ -57,7 +57,7 @@ class Match:
         matchDetails = f'{self.matchDate.astimezone(tz=ZoneInfo("Europe/London")).strftime("%c %Z")} - {self.competition} - Stage: {self.stage} - Group: {self.group}'
 
         # Create a string for the scoreline
-        scoreLine = f'{self.homeTeam} {self.homeScore} - {self.awayScore} {self.awayTeam} - {self.status}'
+        scoreLine = f'{self.homeTeam} {self.homeScore} - {self.awayScore} {self.awayTeam} - {self.status} - Attendance {self.attendance}'
 
         # Return the two strings separated by a new line
         return f'{matchDetails}\n{scoreLine}'
