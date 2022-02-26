@@ -31,13 +31,19 @@ class Footy:
                 print(response.content)
                 return
 
-    def GetTodaysMatches(self) -> Optional[list[Match]]:
+    def GetMatches(self, dateFrom: Optional[date] = None, dateTo: Optional[date] = None) -> Optional[list[Match]]:
         # Initialise an empty list of matches
         matchList: list[Match] = []
 
+        # Sort out the dates
+        if dateFrom is None:
+            dateFrom = date.today()
+        if dateTo is None or dateTo < dateFrom:
+            dateTo = dateFrom
+
         # Try to download today's matches
         try:
-            response = requests.get(f'https://api.football-data.org//v2/competitions/2021/matches/?dateFrom={date.today()}&dateTo={date.today()}', headers=HEADERS)
+            response = requests.get(f'https://api.football-data.org//v2/competitions/2021/matches/?dateFrom={dateFrom}&dateTo={dateTo}', headers=HEADERS)
         except:
             # In case of download failure return None to allow a retry
             print('Could not download data')

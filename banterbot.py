@@ -95,8 +95,11 @@ class BanterBot:
         self.GetMatches()
 
     def GetMatches(self) -> None:
+        # Log that we are updating today's matches
+        print('Updating matches')
+
         # Get today's matches for the teams in the list
-        self.todaysMatches = self.footy.GetTodaysMatches()
+        self.todaysMatches = self.footy.GetMatches()
 
         # If the download was successful, print the matches
         if self.todaysMatches is not None:
@@ -109,7 +112,7 @@ class BanterBot:
 
                 # If the match is in the future
                 if match.matchDate > datetime.now(ZoneInfo('UTC')):
-                    # Add a job to send a message that this should be n easy game
+                    # Add a job to send a message that this should be an easy game
                     self.jq.run_once(self.SendEasyGame, match.matchDate - timedelta(minutes=5), context=teamContext)
 
                 # Add a job to check the scores once the game starts
@@ -132,14 +135,16 @@ class BanterBot:
             if newMatchData is not None:
                 if oldMatchData.homeScore != newMatchData.homeScore or oldMatchData.awayScore != newMatchData.awayScore:
                     context.bot.send_message(chat_id=CHAT_ID, text=f'{newMatchData}')
+                    print(f'{newMatchData}')
 
                 if newMatchData.status != 'FINISHED':
-                    # Add a job to check the scores once the game starts
+                    # Add a job to check the scores again in a minute
                     matchContext = newMatchData
                     self.jq.run_once(self.SendScoreUpdates, 60, context=matchContext)
                 elif oldMatchData.status != 'FINISHED':
                     # Send the final score
                     context.bot.send_message(chat_id=CHAT_ID, text=f'{newMatchData}')
+                    print(f'{newMatchData}')
         else:
             return
 
@@ -152,6 +157,7 @@ class BanterBot:
 
         # Send the message
         context.bot.send_message(chat_id=CHAT_ID, text=f'Plenty of empty seats at {ground}')
+        print(f'Plenty of empty seats at {ground}')
 
     def SendEasyGame(self, context: CallbackContext) -> None:
         # Get the full name for this team
@@ -162,6 +168,7 @@ class BanterBot:
 
         # Send the message
         context.bot.send_message(chat_id=CHAT_ID, text=f'Should be an easy game for {teamName}')
+        print(f'Should be an easy game for {teamName}')
 
     # Log errors
     def error(self, update, context):
