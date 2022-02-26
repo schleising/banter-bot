@@ -29,9 +29,9 @@ teamMapping = {
         'name': 'Liverpool',
         'ground': 'Anfield',
     },
-    'Manchester City FC': {
-        'name': 'Man City',
-        'ground': 'the Etihad'
+    'West Ham United FC': {
+        'name': 'West Ham',
+        'ground': 'the London Stadium'
     }
 }
 
