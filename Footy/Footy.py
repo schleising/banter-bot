@@ -21,9 +21,15 @@ class Footy:
                 print('Could not download data')
                 return
 
-            # Add the teams to the list
-            data = response.json()
-            self.teams = [team['name'] for team in data['teams']]
+            # Check the download status is good
+            if response.status_code == requests.codes.ok:
+                # Add the teams to the list
+                data = response.json()
+                self.teams = [team['name'] for team in data['teams']]
+            else:
+                # If the download failed, return None to allow a retry
+                print(response.content)
+                return
 
     def GetTodaysMatches(self) -> Optional[list[Match]]:
         # Initialise an empty list of matches
