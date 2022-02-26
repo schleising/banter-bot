@@ -137,6 +137,9 @@ class BanterBot:
                     # Add a job to check the scores once the game starts
                     matchContext = newMatchData
                     self.jq.run_once(self.SendScoreUpdates, 60, context=matchContext)
+                elif oldMatchData.status != 'FINISHED':
+                    # Send the final score
+                    context.bot.send_message(chat_id=CHAT_ID, text=f'{newMatchData}')
         else:
             return
 
