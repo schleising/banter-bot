@@ -111,7 +111,7 @@ class BanterBot:
 
                 # If the match is in the future
                 if match.matchDate > datetime.now(ZoneInfo('UTC')):
-                    # Add a job to send a message that this should be an easy game
+                    # Add a job to send a message that this should be an easy game 5 minutes before the game starts
                     self.jq.run_once(self.SendEasyGame, match.matchDate - timedelta(minutes=5), context=teamContext)
 
                 # Add a job to check the scores once the game starts
@@ -121,7 +121,7 @@ class BanterBot:
 
                 # If this is a home game for one of the teams we're interested in, add the empty seats message
                 if match.homeTeam in self.teams:
-                    # Add a job to send the empty seats message
+                    # Add a job to send the empty seats message 5 minutes after the game starts
                     self.jq.run_once(self.SendEmptySeats, match.matchDate + timedelta(minutes=5), context=teamContext)
         else:
             print('Download Failed')
