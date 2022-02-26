@@ -19,7 +19,7 @@ CHAT_ID = '-701653934'
 teamMapping = {
     'Tottenham Hotspur FC': {
         'name': 'Tottenham',
-        'ground': 'Tottenham Hotspur Sainsburys Arena',
+        'ground': 'Tottenham Hotspur Sainsburys NFL Arena',
     },
     'Chelsea FC': {
         'name': 'Chelsea',
