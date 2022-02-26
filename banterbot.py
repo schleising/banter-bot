@@ -132,7 +132,10 @@ class BanterBot:
             newMatchData: Optional[Match] = self.footy.GetMatch(oldMatchData.id)
 
             if newMatchData is not None:
-                if oldMatchData.homeScore != newMatchData.homeScore or oldMatchData.awayScore != newMatchData.awayScore:
+                if oldMatchData.status == 'SCHEDULED' and newMatchData.status == 'IN_PLAY':
+                    context.bot.send_message(chat_id=CHAT_ID, text=f'Kickoff\n{newMatchData}')
+                    print(f'Kickoff\n{newMatchData}')
+                elif oldMatchData.homeScore != newMatchData.homeScore or oldMatchData.awayScore != newMatchData.awayScore:
                     context.bot.send_message(chat_id=CHAT_ID, text=f'{newMatchData}')
                     print(f'{newMatchData}')
 
