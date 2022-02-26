@@ -8,8 +8,22 @@ from Footy.Match import Match
 
 class Footy:
     # Set the list of teams we're interested in
-    def __init__(self, teams) -> None:
-        self.teams = teams
+    def __init__(self, teams: Optional[list[str]] = None) -> None:
+        # If a team list is given, use that
+        if teams is not None:
+            self.teams = teams
+        else:
+            # If no team list is given, download the full list of Proemier League teams
+            try:
+                response = requests.get(f'https://api.football-data.org//v2/competitions/2021/teams', headers=HEADERS)
+            except:
+                # In case of download failure return None to allow a retry
+                print('Could not download data')
+                return
+
+            # Add the teams to the list
+            data = response.json()
+            self.teams = [team['name'] for team in data['teams']]
 
     def GetTodaysMatches(self) -> Optional[list[Match]]:
         # Initialise an empty list of matches

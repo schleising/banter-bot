@@ -8,7 +8,7 @@ teams = [
 ]
 
 # Create a Footy object using the list of teams we're interested in
-footy = Footy(teams)
+footy = Footy()
 
 # Get today's matches for the teams in the list
 todaysMatches = footy.GetTodaysMatches()
