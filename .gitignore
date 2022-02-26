@@ -127,4 +127,5 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
-secret.txt
+bot_token.txt
+football_api_token.txt

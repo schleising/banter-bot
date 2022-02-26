@@ -2,6 +2,7 @@ from datetime import datetime
 from typing import Any
 from zoneinfo import ZoneInfo
 
+from pytz import timezone
 from dateparser import parse
 
 class Match:
@@ -17,9 +18,9 @@ class Match:
         # Get and parse the match date and time, times are all UTC, so make sure the datetime is aware
         matchDate = parse(matchData['utcDate'])
         if matchDate is None:
-            self.matchDate = datetime(1900, 1, 1)
+            self.matchDate = datetime(1900, 1, 1).replace(tzinfo=timezone('UTC'))
         else:
-            self.matchDate = matchDate
+            self.matchDate = matchDate.replace(tzinfo=timezone('UTC'))
 
         # Set the competition name
         self.competition = competition
