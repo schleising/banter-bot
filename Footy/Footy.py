@@ -45,7 +45,7 @@ class Footy:
 
         # Check the download status is good
         if response.status_code == requests.codes.ok:
-            # Deconde the JSON response
+            # Decode the JSON response
             data = response.json()
 
             # Set the competition name
@@ -63,6 +63,30 @@ class Footy:
             # Return the match list
             return matchList
 
+        else:
+            # If the download failed, return None to allow a retry
+            print(response.content)
+            return None
+
+    def GetMatch(self, id: str) -> Optional[Match]:
+        # Try to download today's matches
+        try:
+            response = requests.get(f'https://api.football-data.org//v2/matches/{id}', headers=HEADERS)
+        except:
+            # In case of download failure return None to allow a retry
+            print('Could not download data')
+            return None
+
+        # Check the download status is good
+        if response.status_code == requests.codes.ok:
+            # Decode the JSON response
+            data = response.json()
+
+            # Get the competition
+            competition = data['match']['competition']['name']
+
+            # Create and return a match from the data
+            return Match(data['match'], competition)
         else:
             # If the download failed, return None to allow a retry
             print(response.content)

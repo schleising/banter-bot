@@ -7,6 +7,9 @@ from dateparser import parse
 
 class Match:
     def __init__(self, matchData: dict[str, Any], competition: str) -> None:
+        # Get the match ID
+        self.id = matchData['id']
+
         # Get the home and away team names
         self.homeTeam = matchData['homeTeam']['name']
         self.awayTeam = matchData['awayTeam']['name']

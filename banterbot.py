@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta, time
 from pathlib import Path
+from typing import Optional
 import warnings
 import sys
 import logging
@@ -9,6 +10,7 @@ from pytz import timezone
 from telegram.ext import Updater, JobQueue, CallbackContext
 
 from Footy.Footy import Footy
+from Footy.Match import Match
 
 # Set the chat ID
 CHAT_ID = '-701653934'
@@ -53,6 +55,12 @@ class BanterBot:
             print('No bot_token.txt file found, you need to put your token from BotFather in here')
             sys.exit()
 
+        # Set the teams we're interested in
+        self.teams = [team for team in teamMapping]
+
+        # Create a Footy object using the list of teams we're interested in
+        self.footy = Footy(self.teams)
+
         # Create the updater
         self.updater = Updater(token, use_context=True)
 
@@ -87,14 +95,8 @@ class BanterBot:
         self.GetMatches()
 
     def GetMatches(self) -> None:
-        # Set the teams we're interested in
-        teams = [team for team in teamMapping]
-
-        # Create a Footy object using the list of teams we're interested in
-        footy = Footy(teams)
-
         # Get today's matches for the teams in the list
-        self.todaysMatches = footy.GetTodaysMatches()
+        self.todaysMatches = self.footy.GetTodaysMatches()
 
         # If the download was successful, print the matches
         if self.todaysMatches is not None:
@@ -102,20 +104,41 @@ class BanterBot:
             for match in self.todaysMatches:
                 print(match)
 
+                # Set the context to the team name
+                teamContext=match.homeTeam if match.homeTeam in self.teams else match.awayTeam
+
                 # If the match is in the future
                 if match.matchDate > datetime.now(ZoneInfo('UTC')):
-                    # Set the context to the team name
-                    context=match.homeTeam if match.homeTeam in teams else match.awayTeam
-
                     # Add a job to send a message that this should be n easy game
-                    self.jq.run_once(self.SendEasyGame, match.matchDate - timedelta(minutes=5), context=context)
+                    self.jq.run_once(self.SendEasyGame, match.matchDate - timedelta(minutes=5), context=teamContext)
 
-                    # If this is a home game for one of the teams we're interested in, add the empty seats message
-                    if match.homeTeam in teams:
-                        # Add a job to send the empty seats message
-                        self.jq.run_once(self.SendEmptySeats, match.matchDate + timedelta(minutes=5), context=context)
+                # Add a job to check the scores once the game starts
+                matchContext = match
+                runTime = match.matchDate if match.matchDate > datetime.now(ZoneInfo('UTC')) else 0
+                self.jq.run_once(self.SendScoreUpdates, runTime, context=matchContext)
+
+                # If this is a home game for one of the teams we're interested in, add the empty seats message
+                if match.homeTeam in self.teams:
+                    # Add a job to send the empty seats message
+                    self.jq.run_once(self.SendEmptySeats, match.matchDate + timedelta(minutes=5), context=teamContext)
         else:
             print('Download Failed')
+
+    def SendScoreUpdates(self, context: CallbackContext):
+        if context.job is not None:
+            oldMatchData: Match = context.job.context
+            newMatchData: Optional[Match] = self.footy.GetMatch(oldMatchData.id)
+
+            if newMatchData is not None:
+                if oldMatchData.homeScore != newMatchData.homeScore or oldMatchData.awayScore != newMatchData.awayScore:
+                    context.bot.send_message(chat_id=CHAT_ID, text=f'{newMatchData}')
+
+                if newMatchData.status != 'FINISHED':
+                    # Add a job to check the scores once the game starts
+                    matchContext = newMatchData
+                    self.jq.run_once(self.SendScoreUpdates, 60, context=matchContext)
+        else:
+            return
 
     def SendEmptySeats(self, context: CallbackContext) -> None:
         # Get the full team name
