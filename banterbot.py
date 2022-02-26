@@ -108,7 +108,7 @@ class BanterBot:
                     context=match.homeTeam if match.homeTeam in teams else match.awayTeam
 
                     # Add a job to send a message that this should be n easy game
-                    self.jq.run_once(self.SendEasyGame, match.matchDate - timedelta(minutes=11), context=context)
+                    self.jq.run_once(self.SendEasyGame, match.matchDate - timedelta(minutes=5), context=context)
 
                     # If this is a home game for one of the teams we're interested in, add the empty seats message
                     if match.homeTeam in teams:
