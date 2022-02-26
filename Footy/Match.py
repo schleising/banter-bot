@@ -1,5 +1,6 @@
 from datetime import datetime
 from typing import Any
+from zoneinfo import ZoneInfo
 
 from dateparser import parse
 
@@ -14,7 +15,7 @@ class Match:
         self.awayScore = matchData['score']['fullTime']['awayTeam'] if matchData['score']['fullTime']['awayTeam'] is not None else 'TBD'
 
         # Get and parse the match date and time, times are all UTC, so make sure the datetime is aware
-        matchDate = parse(matchData['utcDate'], settings={'TIMEZONE': 'UTC'})
+        matchDate = parse(matchData['utcDate'])
         if matchDate is None:
             self.matchDate = datetime(1900, 1, 1)
         else:
@@ -30,7 +31,7 @@ class Match:
     # Convert this match into a string for printing
     def __str__(self) -> str:
         # Create a string for the match details
-        matchDetails = f'{self.matchDate.strftime("%c")} - {self.competition} - Stage: {self.stage} - Group: {self.group}'
+        matchDetails = f'{self.matchDate.astimezone(tz=ZoneInfo("Europe/London")).strftime("%c %Z")} - {self.competition} - Stage: {self.stage} - Group: {self.group}'
 
         # Create a string for the scoreline
         scoreLine = f'{self.homeTeam} {self.homeScore} - {self.awayScore} {self.awayTeam}'
