@@ -1,32 +1,22 @@
-from datetime import date, timedelta
-from pathlib import Path
-import sys
+from Footy.Footy import Footy
 
-import requests
+# Set the teams we're interested in
+teams = [
+    'Liverpool FC',
+    'Chelsea FC',
+    'Tottenham Hotspur FC',
+]
 
-from Footy.Footy import Match
+# Create a Footy object using the list of teams we're interested in
+footy = Footy(teams)
 
-try:
-    with open(Path('secret.txt'), 'r', encoding='utf-8') as secretFile:
-        api_key = secretFile.read()
-except:
-    print('No secret.txt file found')
-    sys.exit()
+# Get today's matches for the teams in the list
+todaysMatches = footy.GetTodaysMatches()
 
-headers = { 'X-Auth-Token': api_key }
-
-try:
-    response = requests.get(f'https://api.football-data.org//v2/teams/64/matches/?status=FINISHED&dateFrom={date.today() - timedelta(weeks=1)}&dateTo={date.today()}', headers=headers)
-except:
-    print('Could not download data')
-    sys.exit()
-
-if response.status_code == requests.codes.ok:
-    data = response.json()
-    for matchData in data['matches']:
-        match = Match(matchData)
-
+# If the download was successful, print the matches
+if todaysMatches is not None:
+    for match in todaysMatches:
         print()
         print(match)
 else:
-    print(response.content)
+    print('Download Failed')

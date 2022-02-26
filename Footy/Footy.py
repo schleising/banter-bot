@@ -1,25 +1,49 @@
-from datetime import datetime
-from typing import Any
+from datetime import date
+from typing import Optional
 
-from dateparser import parse
+import requests
 
-class Match:
-    def __init__(self, matchData: dict[str, Any]) -> None:
-        self.homeTeam = matchData['homeTeam']['name']
-        self.awayTeam = matchData['awayTeam']['name']
-        self.homeScore = matchData['score']['fullTime']['homeTeam'] if matchData['score']['fullTime']['homeTeam'] is not None else 'TBD'
-        self.awayScore = matchData['score']['fullTime']['awayTeam'] if matchData['score']['fullTime']['awayTeam'] is not None else 'TBD'
-        matchDate = parse(matchData['utcDate'], settings={'TIMEZONE': 'UTC'})
-        if matchDate is None:
-            self.matchDate = datetime(1900, 1, 1)
+from Footy import HEADERS
+from Footy.Match import Match
+
+class Footy:
+    # Set the list of teams we're interested in
+    def __init__(self, teams) -> None:
+        self.teams = teams
+
+    def GetTodaysMatches(self) -> Optional[list[Match]]:
+        # Initialise an empty list of matches
+        matchList: list[Match] = []
+
+        # Try to download today's matches
+        try:
+            response = requests.get(f'https://api.football-data.org//v2/competitions/2021/matches/?dateFrom={date.today()}&dateTo={date.today()}', headers=HEADERS)
+        except:
+            # In case of download failure return None to allow a retry
+            print('Could not download data')
+            return None
+
+        # Check the download status is good
+        if response.status_code == requests.codes.ok:
+            # Deconde the JSON response
+            data = response.json()
+
+            # Set the competition name
+            competiton = data['competition']['name']
+
+            # Iterate over the matches
+            for matchData in data['matches']:
+                # Turn the response into a match type
+                match = Match(matchData, competiton)
+
+                # If the match involves one of the teams we're interested in append it to the match list
+                if match.homeTeam in self.teams or match.awayTeam in self.teams:
+                    matchList.append(match)
+
+            # Return the match list
+            return matchList
+
         else:
-            self.matchDate = matchDate
-        self.competition = matchData['competition']['name']
-        self.stage = matchData['stage']
-        self.group = matchData['group']
-
-    def __str__(self) -> str:
-        matchDetails = f'{self.matchDate.date()} - {self.competition} - Stage: {self.stage} - Group: {self.group}'
-        scoreLine = f'{self.homeTeam} {self.homeScore} - {self.awayScore} {self.awayTeam}'
-
-        return f'{matchDetails}\n{scoreLine}'
+            # If the download failed, return None to allow a retry
+            print(response.content)
+            return None
