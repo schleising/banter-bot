@@ -129,3 +129,4 @@ dmypy.json
 .pyre/
 bot_token.txt
 football_api_token.txt
+.DS_Store
