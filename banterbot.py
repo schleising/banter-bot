@@ -7,6 +7,7 @@ import logging
 from zoneinfo import ZoneInfo
 
 from pytz import timezone
+from telegram import Update
 from telegram.ext import Updater, JobQueue, CallbackContext
 
 from Footy.Footy import Footy
@@ -122,7 +123,7 @@ class BanterBot:
         else:
             print('Download Failed')
 
-    def SendScoreUpdates(self, context: CallbackContext):
+    def SendScoreUpdates(self, context: CallbackContext) -> None:
         if context.job is not None:
             oldMatchData: Match = context.job.context
             newMatchData: Optional[Match] = self.footy.GetMatch(oldMatchData.id)
@@ -171,11 +172,11 @@ class BanterBot:
         print(f'Should be an easy game for {teamName}')
 
     # Log errors
-    def error(self, update, context):
+    def error(self, update: Update, context) -> None:
         self.logger.warning('Update "%s" caused error "%s"', update, context.error)
 
 # Main function
-def main():
+def main() -> None:
     # Filter out a warning from dateparser
     warnings.filterwarnings('ignore', message='The localize method is no longer necessary')
 
