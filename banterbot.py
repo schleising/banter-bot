@@ -129,23 +129,26 @@ class BanterBot:
             newMatchData: Optional[Match] = self.footy.GetMatch(oldMatchData.id)
 
             if newMatchData is not None:
+                # Get any changes in status
+                statusChanges = newMatchData.CheckStatus(oldMatchData)
+
                 # Check if this is the start of the match
-                if oldMatchData.status == 'SCHEDULED' and newMatchData.status == 'IN_PLAY':
+                if statusChanges.firstHalfStarted:
                     context.bot.send_message(chat_id=CHAT_ID, text=f'Kickoff\n{newMatchData}')
                     print(f'Kickoff\n{newMatchData}')
                 # Check for a goal
-                elif oldMatchData.homeScore != newMatchData.homeScore or oldMatchData.awayScore != newMatchData.awayScore:
+                elif statusChanges.homeTeamScored or statusChanges.awayTeamScored:
                     context.bot.send_message(chat_id=CHAT_ID, text=f'{newMatchData}')
                     print(f'{newMatchData}')
 
-                if newMatchData.status not in ['FINISHED', 'POSTPONED']:
-                    # Add a job to check the scores again in 20 seconds
-                    matchContext = newMatchData
-                    self.jq.run_once(self.SendScoreUpdates, 20, context=matchContext)
-                elif oldMatchData.status not in ['FINISHED', 'POSTPONED']:
+                if statusChanges.fullTime:
                     # Send the final score
                     context.bot.send_message(chat_id=CHAT_ID, text=f'Full Time\n{newMatchData}')
                     print(f'Full Time\n{newMatchData}')
+                else:
+                    # Add a job to check the scores again in 20 seconds
+                    matchContext = newMatchData
+                    self.jq.run_once(self.SendScoreUpdates, 20, context=matchContext)
         else:
             return
 
