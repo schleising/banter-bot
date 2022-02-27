@@ -29,10 +29,6 @@ teamMapping = {
         'name': 'Liverpool',
         'ground': 'Anfield',
     },
-    'West Ham United FC': {
-        'name': 'West Ham',
-        'ground': 'the London Stadium'
-    }
 }
 
 class BanterBot:
