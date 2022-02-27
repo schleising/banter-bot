@@ -64,7 +64,9 @@ class Footy:
 
                 # If the match involves one of the teams we're interested in append it to the match list
                 if match.homeTeam in self.teams or match.awayTeam in self.teams:
-                    matchList.append(match)
+                    # Check that the match may be on today
+                    if match.status in ['SCHEDULED', 'SUSPENDED', 'PAUSED', 'IN_PLAY']:
+                        matchList.append(match)
 
             # Return the match list
             return matchList
