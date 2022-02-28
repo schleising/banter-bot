@@ -56,26 +56,50 @@ class Match:
         self.status = matchData['status']
 
     def CheckStatus(self, oldMatch: Match) -> MatchChanges:
+        # Check for various state changes in the match
         matchChanges = MatchChanges()
+
+        # Check whether the match has started
         if oldMatch.status == MatchStatus.scheduled and self.status == MatchStatus.inPlay:
             matchChanges.firstHalfStarted = True
-        if oldMatch.status == MatchStatus.inPlay and self.status == MatchStatus.paused:
+
+        # Check for half time
+        elif oldMatch.status == MatchStatus.inPlay and self.status == MatchStatus.paused:
             matchChanges.halfTime = True
-        if oldMatch.status == MatchStatus.paused and self.status == MatchStatus.inPlay:
+
+        # Check for the start of the second half
+        elif oldMatch.status == MatchStatus.paused and self.status == MatchStatus.inPlay:
             matchChanges.secondHalfStarted = True
-        if oldMatch.status == MatchStatus.inPlay and self.status == MatchStatus.finished:
+
+        # Check for full time
+        elif oldMatch.status == MatchStatus.inPlay and self.status == MatchStatus.finished:
             matchChanges.fullTime = True
+
+        # Check for a home goal
         if oldMatch.homeScore < self.homeScore:
             matchChanges.homeTeamScored = True
-            matchChanges.awayTeamImproving = True
+
+            # If the home team scored, but they're still behind or drawing then they're improving
+            if self.homeScore <= self.awayScore:
+                matchChanges.homeTeamImproving = True
+
+        # Check for an away goal
         if oldMatch.awayScore < self.awayScore:
             matchChanges.awayTeamScored = True
-            matchChanges.awayTeamImproving = True
+
+            # If the away team scored, but they're still behind or drawing then they're improving
+            if self.awayScore <= self.homeScore:
+                matchChanges.awayTeamImproving = True
+
+        # Check for the home team winning
         if self.homeScore > self.awayScore:
             matchChanges.homeTeamWinning = True
+
+        # Check for the away team winning
         elif self.awayScore > self.homeScore:
             matchChanges.awayTeamWinning = True
 
+        # Return the changes
         return matchChanges
 
 
