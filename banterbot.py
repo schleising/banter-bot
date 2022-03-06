@@ -120,7 +120,7 @@ class BanterBot:
 
     def SendScoreUpdates(self, context: CallbackContext) -> None:
         if context.job is not None and isinstance(context.job.context, Match):
-            oldMatchData = context.job.context
+            oldMatchData: Match = context.job.context
             newMatchData: Optional[Match] = self.footy.GetMatch(oldMatchData)
 
             if newMatchData is not None:
@@ -171,8 +171,7 @@ class BanterBot:
             ground = allTeams[team]['ground']
 
             # Send the message
-            context.bot.send_message(chat_id=CHAT_ID, text=f'Plenty of empty seats at {ground}')
-            print(f'Plenty of empty seats at {ground}')
+            self.SendMessage(context.bot, CHAT_ID, f'Plenty of empty seats at {ground}')
 
     def SendEasyGame(self, context: CallbackContext) -> None:
         if  context.job is not None and isinstance(context.job.context, str):
@@ -183,8 +182,7 @@ class BanterBot:
             teamName = allTeams[team]['name']
 
             # Send the message
-            context.bot.send_message(chat_id=CHAT_ID, text=f'Should be an easy game for {teamName}')
-            print(f'Should be an easy game for {teamName}')
+            self.SendMessage(context.bot, CHAT_ID, f'Should be an easy game for {teamName}')
 
     # Log errors
     def error(self, update, context: CallbackContext) -> None:
