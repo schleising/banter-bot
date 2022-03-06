@@ -11,7 +11,7 @@ from telegram.ext import Updater, JobQueue, CallbackContext
 
 from Footy.Footy import Footy
 from Footy.Match import Match
-from Footy.TeamData import teamsToWatch, allTeams
+from Footy.TeamData import teamsToWatch, allTeams, supportedTeamMapping, myTeamMapping
 
 # Set the chat ID
 CHAT_ID = '-701653934'
@@ -34,10 +34,10 @@ class BanterBot:
             sys.exit()
 
         # Set the teams we're interested in
-        self.teams = [team for team in teamsToWatch]
+        teams = [team for team in teamsToWatch]
 
         # Create a Footy object using the list of teams we're interested in
-        self.footy = Footy(self.teams)
+        self.footy = Footy(teams)
 
         # Create the Updater and pass it your bot's token.
         # Make sure to set use_context=True to use the new context based callbacks
@@ -87,11 +87,14 @@ class BanterBot:
             for match in self.todaysMatches:
                 print(match)
 
-                # Set the context to the team name
-                teamContext=match.homeTeam if match.homeTeam in self.teams else match.awayTeam
+                # Set the context to the supported team name if My Team is not playing, otherwise set it to the opposition
+                if match.homeTeam in supportedTeamMapping or match.awayTeam in supportedTeamMapping:
+                    teamContext=match.homeTeam if match.homeTeam in supportedTeamMapping else match.awayTeam
+                else:
+                    teamContext=match.homeTeam if match.homeTeam not in myTeamMapping else match.awayTeam
 
                 # If the match is in the future
-                if match.matchDate > datetime.now(ZoneInfo('UTC')):
+                if match.matchDate > (datetime.now(ZoneInfo('UTC')) - timedelta(minutes=5)):
                     # Add a job to send a message that this should be an easy game 5 minutes before the game starts
                     self.jq.run_once(self.SendEasyGame, match.matchDate - timedelta(minutes=5), context=teamContext)
 
@@ -101,7 +104,7 @@ class BanterBot:
                 self.jq.run_once(self.SendScoreUpdates, runTime, context=matchContext)
 
                 # If this is a home game for one of the teams we're interested in, add the empty seats message
-                if match.homeTeam in self.teams:
+                if match.homeTeam in supportedTeamMapping:
                     # Add a job to send the empty seats message 5 minutes after the game starts
                     self.jq.run_once(self.SendEmptySeats, match.matchDate + timedelta(minutes=5), context=teamContext)
         else:
