@@ -7,7 +7,6 @@ import logging
 from zoneinfo import ZoneInfo
 
 from pytz import timezone
-from telegram import Update
 from telegram.ext import Updater, JobQueue, CallbackContext
 
 from Footy.Footy import Footy
@@ -124,8 +123,8 @@ class BanterBot:
             print('Download Failed')
 
     def SendScoreUpdates(self, context: CallbackContext) -> None:
-        if context.job is not None:
-            oldMatchData: Match = context.job.context
+        if context.job is not None and isinstance(context.job.context, Match):
+            oldMatchData = context.job.context
             newMatchData: Optional[Match] = self.footy.GetMatch(oldMatchData.id)
 
             if newMatchData is not None:
@@ -153,29 +152,31 @@ class BanterBot:
             return
 
     def SendEmptySeats(self, context: CallbackContext) -> None:
-        # Get the full team name
-        team = context.job.context if context.job is not None else 'FATAL ERROR !!!'
+        if  context.job is not None and isinstance(context.job.context, str):
+            # Get the full team name
+            team = context.job.context
 
-        # Get the ground for this tean
-        ground = teamMapping[team]['ground']
+            # Get the ground for this tean
+            ground = teamMapping[team]['ground']
 
-        # Send the message
-        context.bot.send_message(chat_id=CHAT_ID, text=f'Plenty of empty seats at {ground}')
-        print(f'Plenty of empty seats at {ground}')
+            # Send the message
+            context.bot.send_message(chat_id=CHAT_ID, text=f'Plenty of empty seats at {ground}')
+            print(f'Plenty of empty seats at {ground}')
 
     def SendEasyGame(self, context: CallbackContext) -> None:
-        # Get the full name for this team
-        team = context.job.context if context.job is not None else 'FATAL ERROR !!!'
+        if  context.job is not None and isinstance(context.job.context, str):
+            # Get the full name for this team
+            team = context.job.context
 
-        # Get the shorter name for this team
-        teamName = teamMapping[team]['name']
+            # Get the shorter name for this team
+            teamName = teamMapping[team]['name']
 
-        # Send the message
-        context.bot.send_message(chat_id=CHAT_ID, text=f'Should be an easy game for {teamName}')
-        print(f'Should be an easy game for {teamName}')
+            # Send the message
+            context.bot.send_message(chat_id=CHAT_ID, text=f'Should be an easy game for {teamName}')
+            print(f'Should be an easy game for {teamName}')
 
     # Log errors
-    def error(self, update: Update, context) -> None:
+    def error(self, update, context: CallbackContext) -> None:
         self.logger.warning('Update "%s" caused error "%s"', update, context.error)
 
 # Main function
