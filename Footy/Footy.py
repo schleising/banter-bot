@@ -77,10 +77,10 @@ class Footy:
             print(response.content)
             return None
 
-    def GetMatch(self, id: str) -> Optional[Match]:
+    def GetMatch(self, oldMatch: Match) -> Optional[Match]:
         # Try to download today's matches
         try:
-            response = requests.get(f'https://api.football-data.org//v2/matches/{id}', headers=HEADERS)
+            response = requests.get(f'https://api.football-data.org//v2/matches/{oldMatch.id}', headers=HEADERS)
         except:
             # In case of download failure return None to allow a retry
             print('Could not download data')
@@ -95,7 +95,7 @@ class Footy:
             competition = data['match']['competition']['name']
 
             # Create and return a match from the data
-            return Match(data['match'], competition)
+            return Match(data['match'], competition, oldMatch)
         else:
             # If the download failed, return None to allow a retry
             print(response.content)

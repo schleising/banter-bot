@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta, time
 from pathlib import Path
+import random
 from typing import Optional
 import warnings
 import sys
@@ -7,11 +8,13 @@ import logging
 from zoneinfo import ZoneInfo
 
 from pytz import timezone
+from telegram import Bot
 from telegram.ext import Updater, JobQueue, CallbackContext
 
 from Footy.Footy import Footy
 from Footy.Match import Match
-from Footy.TeamData import teamsToWatch, allTeams, supportedTeamMapping, myTeamMapping
+from Footy.TeamData import teamsToWatch, allTeams, supportedTeamMapping
+import Footy.BantzStrings as BantzStrings
 
 # Set the chat ID
 CHAT_ID = '-701653934'
@@ -88,13 +91,10 @@ class BanterBot:
                 print(match)
 
                 # Set the context to the supported team name if My Team is not playing, otherwise set it to the opposition
-                if match.homeTeam in supportedTeamMapping or match.awayTeam in supportedTeamMapping:
-                    teamContext=match.homeTeam if match.homeTeam in supportedTeamMapping else match.awayTeam
-                else:
-                    teamContext=match.homeTeam if match.homeTeam not in myTeamMapping else match.awayTeam
+                teamContext=match.teamName
 
                 # If the match is in the future
-                if match.matchDate > (datetime.now(ZoneInfo('UTC')) - timedelta(minutes=5)):
+                if (match.matchDate - timedelta(minutes=5)) > datetime.now(ZoneInfo('UTC')):
                     # Add a job to send a message that this should be an easy game 5 minutes before the game starts
                     self.jq.run_once(self.SendEasyGame, match.matchDate - timedelta(minutes=5), context=teamContext)
 
@@ -103,39 +103,58 @@ class BanterBot:
                 runTime = match.matchDate if match.matchDate > datetime.now(ZoneInfo('UTC')) else 0
                 self.jq.run_once(self.SendScoreUpdates, runTime, context=matchContext)
 
-                # If this is a home game for one of the teams we're interested in, add the empty seats message
-                if match.homeTeam in supportedTeamMapping:
-                    # Add a job to send the empty seats message 5 minutes after the game starts
-                    self.jq.run_once(self.SendEmptySeats, match.matchDate + timedelta(minutes=5), context=teamContext)
+                if (match.matchDate + timedelta(minutes=5)) > datetime.now(ZoneInfo('UTC')):
+                    # If this is a home game for one of the teams we're interested in, add the empty seats message
+                    if match.homeTeam in supportedTeamMapping:
+                        # Add a job to send the empty seats message 5 minutes after the game starts
+                        self.jq.run_once(self.SendEmptySeats, match.matchDate + timedelta(minutes=5), context=teamContext)
         else:
             print('Download Failed')
+
+    def SendMessage(self, bot: Bot, chatId: str, message: Optional[str]):
+        if message is not None:
+            bot.send_message(chat_id=chatId, text=message)
+            print(message)
+        else:
+            print('No Status Change')
 
     def SendScoreUpdates(self, context: CallbackContext) -> None:
         if context.job is not None and isinstance(context.job.context, Match):
             oldMatchData = context.job.context
-            newMatchData: Optional[Match] = self.footy.GetMatch(oldMatchData.id)
+            newMatchData: Optional[Match] = self.footy.GetMatch(oldMatchData)
 
             if newMatchData is not None:
-                # Get any changes in status
-                statusChanges = newMatchData.CheckStatus(oldMatchData)
+                # Get the dict details of the team we're sending a message about
+                teamDict = allTeams[newMatchData.teamName]
+
+                message = None
 
                 # Check if this is the start of the match
-                if statusChanges.firstHalfStarted:
-                    context.bot.send_message(chat_id=CHAT_ID, text=f'Kickoff\n{newMatchData}')
-                    print(f'Kickoff\n{newMatchData}')
-                # Check for a goal
-                elif statusChanges.homeTeamScored or statusChanges.awayTeamScored:
-                    context.bot.send_message(chat_id=CHAT_ID, text=f'{newMatchData}')
-                    print(f'{newMatchData}')
-
-                if statusChanges.fullTime:
-                    # Send the final score
-                    context.bot.send_message(chat_id=CHAT_ID, text=f'Full Time\n{newMatchData}')
-                    print(f'Full Time\n{newMatchData}')
+                if newMatchData.matchChanges.fullTime:
+                    if newMatchData.matchChanges.teamWon:
+                        message = BantzStrings.teamWon[random.randint(0, len(BantzStrings.teamWon ) - 1)].format(**teamDict)
+                    if newMatchData.matchChanges.teamLost:
+                        message = BantzStrings.teamLost[random.randint(0, len(BantzStrings.teamLost ) - 1)].format(**teamDict)
+                    if newMatchData.matchChanges.teamDrew:
+                        message = BantzStrings.teamDrew[random.randint(0, len(BantzStrings.teamDrew ) - 1)].format(**teamDict)
                 else:
+                    if newMatchData.matchChanges.firstHalfStarted:
+                        message = BantzStrings.teamMatchStarted[random.randint(0, len(BantzStrings.teamMatchStarted ) - 1)].format(**teamDict)
+                    # Check for a goal
+                    if newMatchData.matchChanges.teamScored:
+                        message = BantzStrings.teamScored[random.randint(0, len(BantzStrings.teamScored) - 1)].format(**teamDict)
+                    if newMatchData.matchChanges.teamConceded:
+                        message = BantzStrings.teamConceded[random.randint(0, len(BantzStrings.teamConceded) - 1)].format(**teamDict)
+                    if newMatchData.matchChanges.teamVarAgainst:
+                        message = BantzStrings.teamVarAgainst[random.randint(0, len(BantzStrings.teamVarAgainst) - 1)].format(**teamDict)
+                    if newMatchData.matchChanges.teamVarFor:
+                        message = BantzStrings.teamVarFor[random.randint(0, len(BantzStrings.teamVarFor) - 1)].format(**teamDict)
+
                     # Add a job to check the scores again in 20 seconds
                     matchContext = newMatchData
                     self.jq.run_once(self.SendScoreUpdates, 20, context=matchContext)
+
+                self.SendMessage(context.bot, CHAT_ID, message)
         else:
             return
 

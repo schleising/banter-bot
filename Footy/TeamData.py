@@ -1,10 +1,6 @@
 # Map team names and stadiums
-myTeamMapping = {
-    'Manchester City FC': {
-        'name': 'Man City',
-        'ground': 'the City of Manchester Stadium',
-    },
-}
+# myTeamMapping = {
+# }
 
 supportedTeamMapping = {
     'Tottenham Hotspur FC': {
@@ -18,6 +14,10 @@ supportedTeamMapping = {
     'Liverpool FC': {
         'name': 'Liverpool',
         'ground': 'Anfield',
+    },
+    'Manchester City FC': {
+        'name': 'Man City',
+        'ground': 'the City of Manchester Stadium',
     },
 }
 
@@ -88,6 +88,8 @@ unsupportedTeamMapping = {
     },
 }
 
-teamsToWatch = myTeamMapping | supportedTeamMapping
+# teamsToWatch = myTeamMapping | supportedTeamMapping
+teamsToWatch = supportedTeamMapping
 
-allTeams = myTeamMapping | supportedTeamMapping | unsupportedTeamMapping
+# allTeams = myTeamMapping | supportedTeamMapping | unsupportedTeamMapping
+allTeams = supportedTeamMapping | unsupportedTeamMapping
