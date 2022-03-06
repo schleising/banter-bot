@@ -11,25 +11,10 @@ from telegram.ext import Updater, JobQueue, CallbackContext
 
 from Footy.Footy import Footy
 from Footy.Match import Match
+from Footy.TeamData import teamsToWatch, allTeams
 
 # Set the chat ID
 CHAT_ID = '-701653934'
-
-# Map team names and stadiums
-teamMapping = {
-    'Tottenham Hotspur FC': {
-        'name': 'Tottenham',
-        'ground': "Tottenham Hotspur Sainsbury's NFL Arena",
-    },
-    'Chelsea FC': {
-        'name': 'Chelsea',
-        'ground': 'Stamford Bridge',
-    },
-    'Liverpool FC': {
-        'name': 'Liverpool',
-        'ground': 'Anfield',
-    },
-}
 
 class BanterBot:
     def __init__(self) -> None:
@@ -49,7 +34,7 @@ class BanterBot:
             sys.exit()
 
         # Set the teams we're interested in
-        self.teams = [team for team in teamMapping]
+        self.teams = [team for team in teamsToWatch]
 
         # Create a Footy object using the list of teams we're interested in
         self.footy = Footy(self.teams)
@@ -157,7 +142,7 @@ class BanterBot:
             team = context.job.context
 
             # Get the ground for this tean
-            ground = teamMapping[team]['ground']
+            ground = allTeams[team]['ground']
 
             # Send the message
             context.bot.send_message(chat_id=CHAT_ID, text=f'Plenty of empty seats at {ground}')
@@ -169,7 +154,7 @@ class BanterBot:
             team = context.job.context
 
             # Get the shorter name for this team
-            teamName = teamMapping[team]['name']
+            teamName = allTeams[team]['name']
 
             # Send the message
             context.bot.send_message(chat_id=CHAT_ID, text=f'Should be an easy game for {teamName}')
