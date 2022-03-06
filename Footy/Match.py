@@ -1,8 +1,8 @@
+from __future__ import annotations
 from dataclasses import dataclass
 from datetime import datetime
 from typing import Any
 from zoneinfo import ZoneInfo
-from __future__ import annotations
 
 from pytz import timezone
 from dateparser import parse
