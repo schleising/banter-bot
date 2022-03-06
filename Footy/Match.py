@@ -8,7 +8,7 @@ from pytz import timezone
 from dateparser import parse
 
 import Footy.MatchStatus as MatchStatus
-from Footy.TeamData import supportedTeamMapping
+from Footy.TeamData import supportedTeamMapping, allTeams
 
 @dataclass
 class MatchChanges:
@@ -167,13 +167,14 @@ class Match:
         # Return the changes
         return matchChanges
 
+    def GetScoreline(self) -> str:
+        # Create a string for the scoreline
+        return f'{allTeams[self.homeTeam]["name"]} {self.homeScore} - {self.awayScore} {allTeams[self.awayTeam]["name"]}'
+
     # Convert this match into a string for printing
     def __str__(self) -> str:
         # Create a string for the match details
-        matchDetails = f'{self.matchDate.astimezone(tz=ZoneInfo("Europe/London")).strftime("%c %Z")} - {self._competition} - Stage: {self._stage} - Group: {self._group}'
-
-        # Create a string for the scoreline
-        scoreLine = f'{self.homeTeam} {self.homeScore} - {self.awayScore} {self.awayTeam} - {self.status}'
+        matchDetails = f'{self.matchDate.astimezone(tz=ZoneInfo("Europe/London")).strftime("%c %Z")} - {self._competition} - Stage: {self._stage} - Group: {self._group} - {self.status}'
 
         # Return the two strings separated by a new line
-        return f'{matchDetails}\n{scoreLine}'
+        return f'{matchDetails}\n{self.GetScoreline()}'

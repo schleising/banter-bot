@@ -154,6 +154,10 @@ class BanterBot:
                     matchContext = newMatchData
                     self.jq.run_once(self.SendScoreUpdates, 20, context=matchContext)
 
+                # If there is a message, add the scoreline
+                if message is not None:
+                    message = f'{message}\n{newMatchData.GetScoreline()}'
+
                 self.SendMessage(context.bot, CHAT_ID, message)
         else:
             return
