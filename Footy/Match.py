@@ -51,31 +51,31 @@ class Match:
             self.matchDate = matchDate.replace(tzinfo=timezone('UTC'))
 
         # Set the competition name
-        self.competition = competition
+        self._competition = competition
 
         # Set the stage and group
-        self.stage = matchData['stage']
-        self.group = matchData['group']
+        self._stage = matchData['stage']
+        self._group = matchData['group']
 
         # Get the status of the match
         self.status = matchData['status']
 
         # Set whether my team is home or away
         if self.homeTeam in supportedTeamMapping:
-            self.teamHome = True
-            self.teamAway = False
+            self._teamHome = True
+            self._teamAway = False
         elif self.awayTeam in supportedTeamMapping:
-            self.teamHome = False
-            self.teamAway = True
+            self._teamHome = False
+            self._teamAway = True
         else:
-            self.teamHome = False
-            self.teamAway = False
+            self._teamHome = False
+            self._teamAway = False
 
         # Get the team name
-        self.teamName = self.homeTeam if self.teamHome else self.awayTeam
+        self.teamName = self.homeTeam if self._teamHome else self.awayTeam
 
         # Check whether supported teams are playing each other
-        if self.teamHome and self.teamAway:
+        if self._teamHome and self._teamAway:
             self.supportedTeamPlayingSupportedTeam = True
         else:
             self.supportedTeamPlayingSupportedTeam = False
@@ -108,60 +108,60 @@ class Match:
 
             # Check for the home team winning
             if self.homeScore > self.awayScore:
-                matchChanges.teamWon = self.teamHome
-                matchChanges.teamLost = self.teamAway
+                matchChanges.teamWon = self._teamHome
+                matchChanges.teamLost = self._teamAway
 
             # Check for the away team winning
             elif self.homeScore < self.awayScore:
-                matchChanges.teamWon = self.teamAway
-                matchChanges.teamLost = self.teamHome
+                matchChanges.teamWon = self._teamAway
+                matchChanges.teamLost = self._teamHome
             else:
                 # Game was drawn
-                if self.teamHome or self.teamAway:
+                if self._teamHome or self._teamAway:
                     matchChanges.teamDrew = True
 
         # Check for a home goal
         if oldMatch.homeScore < self.homeScore:
-            matchChanges.teamScored = self.teamHome
-            matchChanges.teamConceded = self.teamAway
+            matchChanges.teamScored = self._teamHome
+            matchChanges.teamConceded = self._teamAway
 
             # If the home team scored, but they're still behind or drawing then they're improving
             if self.homeScore <= self.awayScore:
-                matchChanges.teamImproving = self.teamHome
-                matchChanges.teamDeclining = self.teamAway
+                matchChanges.teamImproving = self._teamHome
+                matchChanges.teamDeclining = self._teamAway
 
         # Check for home VAR goal reversal
         elif oldMatch.homeScore > self.homeScore:
-            matchChanges.teamVarAgainst = self.teamHome
-            matchChanges.teamVarFor = self.teamAway
+            matchChanges.teamVarAgainst = self._teamHome
+            matchChanges.teamVarFor = self._teamAway
 
         # Check for an away goal
         if oldMatch.awayScore < self.awayScore:
-            matchChanges.teamScored = self.teamAway
-            matchChanges.teamConceded = self.teamHome
+            matchChanges.teamScored = self._teamAway
+            matchChanges.teamConceded = self._teamHome
 
             # If the away team scored, but they're still behind or drawing then they're improving
             if self.awayScore <= self.homeScore:
-                matchChanges.teamImproving = self.teamAway
-                matchChanges.teamDeclining = self.teamHome
+                matchChanges.teamImproving = self._teamAway
+                matchChanges.teamDeclining = self._teamHome
 
         # Check for home VAR goal reversal
         elif oldMatch.awayScore > self.awayScore:
-            matchChanges.teamVarAgainst = self.teamAway
-            matchChanges.teamVarFor = self.teamHome
+            matchChanges.teamVarAgainst = self._teamAway
+            matchChanges.teamVarFor = self._teamHome
 
         # Check for the home team winning
         if self.homeScore > self.awayScore:
-            matchChanges.teamWinning = self.teamHome
-            matchChanges.teamLosing = self.teamAway
+            matchChanges.teamWinning = self._teamHome
+            matchChanges.teamLosing = self._teamAway
 
         # Check for the away team winning
         elif self.awayScore > self.homeScore:
-            matchChanges.teamWinning = self.teamAway
-            matchChanges.teamLosing = self.teamHome
+            matchChanges.teamWinning = self._teamAway
+            matchChanges.teamLosing = self._teamHome
         else:
             # Game is being drawn
-            if self.teamHome or self.teamAway:
+            if self._teamHome or self._teamAway:
                 matchChanges.teamDrawing = True
 
         # Return the changes
@@ -170,7 +170,7 @@ class Match:
     # Convert this match into a string for printing
     def __str__(self) -> str:
         # Create a string for the match details
-        matchDetails = f'{self.matchDate.astimezone(tz=ZoneInfo("Europe/London")).strftime("%c %Z")} - {self.competition} - Stage: {self.stage} - Group: {self.group}'
+        matchDetails = f'{self.matchDate.astimezone(tz=ZoneInfo("Europe/London")).strftime("%c %Z")} - {self._competition} - Stage: {self._stage} - Group: {self._group}'
 
         # Create a string for the scoreline
         scoreLine = f'{self.homeTeam} {self.homeScore} - {self.awayScore} {self.awayTeam} - {self.status}'
