@@ -141,10 +141,14 @@ class BanterBot:
                     if newMatchData.matchChanges.firstHalfStarted:
                         message = BantzStrings.teamMatchStarted[random.randint(0, len(BantzStrings.teamMatchStarted ) - 1)].format(**teamDict)
                     # Check for a goal
-                    if newMatchData.matchChanges.teamScored:
-                        message = BantzStrings.teamScored[random.randint(0, len(BantzStrings.teamScored) - 1)].format(**teamDict)
-                    if newMatchData.matchChanges.teamConceded:
-                        message = BantzStrings.teamConceded[random.randint(0, len(BantzStrings.teamConceded) - 1)].format(**teamDict)
+                    if newMatchData.matchChanges.teamExtendingLead:
+                        message = BantzStrings.teamExtendingLead[random.randint(0, len(BantzStrings.teamExtendingLead) - 1)].format(**teamDict)
+                    if newMatchData.matchChanges.teamLeadBeingCut:
+                        message = BantzStrings.teamLeadBeingCut[random.randint(0, len(BantzStrings.teamLeadBeingCut) - 1)].format(**teamDict)
+                    if newMatchData.matchChanges.teamClosingGap:
+                        message = BantzStrings.teamClosingGap[random.randint(0, len(BantzStrings.teamClosingGap) - 1)].format(**teamDict)
+                    if newMatchData.matchChanges.teamDeficitGettingBigger:
+                        message = BantzStrings.teamDeficitGettingBigger[random.randint(0, len(BantzStrings.teamDeficitGettingBigger) - 1)].format(**teamDict)
                     if newMatchData.matchChanges.teamVarAgainst:
                         message = BantzStrings.teamVarAgainst[random.randint(0, len(BantzStrings.teamVarAgainst) - 1)].format(**teamDict)
                     if newMatchData.matchChanges.teamVarFor:

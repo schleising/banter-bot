@@ -18,13 +18,20 @@ teamLosing: list[str] = [
     '{name} losing'
 ]
 
-teamImproving: list[str] = [
-    'Important goal for {name}',
-    'Absolute scenes at {ground} as {name} fight back !!',
+teamExtendingLead: list[str] = [
+    '{name} extending lead',
 ]
 
-teamDeclining: list[str] = [
-    '{name} getting worse'
+teamLeadBeingCut: list[str] = [
+    '{name} lead being cut'
+]
+
+teamClosingGap: list[str] = [
+    '{name} closing gap',
+]
+
+teamDeficitGettingBigger: list[str] = [
+    '{name} deficit getting bigger'
 ]
 
 teamVarFor: list[str] = [

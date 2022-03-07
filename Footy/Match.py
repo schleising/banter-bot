@@ -21,8 +21,10 @@ class MatchChanges:
     teamConceded: bool = False
     teamWinning: bool = False
     teamLosing: bool = False
-    teamImproving: bool = False
-    teamDeclining: bool = False
+    teamExtendingLead: bool = False
+    teamLeadBeingCut: bool = False
+    teamClosingGap: bool = False
+    teamDeficitGettingBigger: bool = False
     teamVarFor: bool = False
     teamVarAgainst: bool = False
     teamDrawing: bool = False
@@ -128,9 +130,18 @@ class Match:
                 matchChanges.teamConceded = self._teamAway
 
                 # If the home team scored, but they're still behind or drawing then they're improving
-                if self.homeScore <= self.awayScore:
-                    matchChanges.teamImproving = self._teamHome
-                    matchChanges.teamDeclining = self._teamAway
+                if self.homeScore < self.awayScore:
+                    matchChanges.teamClosingGap = self._teamHome
+                    matchChanges.teamDeficitGettingBigger = self._teamAway
+                    matchChanges.teamWinning = self._teamAway
+                    matchChanges.teamLosing = self._teamHome
+                elif self.homeScore > self.awayScore:
+                    matchChanges.teamExtendingLead = self._teamHome
+                    matchChanges.teamLeadBeingCut = self._teamAway
+                    matchChanges.teamWinning = self._teamHome
+                    matchChanges.teamLosing = self._teamAway
+                else:
+                    matchChanges.teamDrawing = True
 
             # Check for home VAR goal reversal
             elif oldMatch.homeScore > self.homeScore:
@@ -142,29 +153,24 @@ class Match:
                 matchChanges.teamScored = self._teamAway
                 matchChanges.teamConceded = self._teamHome
 
-                # If the away team scored, but they're still behind or drawing then they're improving
-                if self.awayScore <= self.homeScore:
-                    matchChanges.teamImproving = self._teamAway
-                    matchChanges.teamDeclining = self._teamHome
+                # If the home team scored, but they're still behind or drawing then they're improving
+                if self.awayScore < self.homeScore:
+                    matchChanges.teamClosingGap = self._teamAway
+                    matchChanges.teamDeficitGettingBigger = self._teamHome
+                    matchChanges.teamWinning = self._teamHome
+                    matchChanges.teamLosing = self._teamAway
+                elif self.awayScore > self.homeScore:
+                    matchChanges.teamExtendingLead = self._teamAway
+                    matchChanges.teamLeadBeingCut = self._teamHome
+                    matchChanges.teamWinning = self._teamAway
+                    matchChanges.teamLosing = self._teamHome
+                else:
+                    matchChanges.teamDrawing = True
 
             # Check for home VAR goal reversal
             elif oldMatch.awayScore > self.awayScore:
                 matchChanges.teamVarAgainst = self._teamAway
                 matchChanges.teamVarFor = self._teamHome
-
-            # Check for the home team winning
-            if self.homeScore > self.awayScore:
-                matchChanges.teamWinning = self._teamHome
-                matchChanges.teamLosing = self._teamAway
-
-            # Check for the away team winning
-            elif self.awayScore > self.homeScore:
-                matchChanges.teamWinning = self._teamAway
-                matchChanges.teamLosing = self._teamHome
-            else:
-                # Game is being drawn
-                if self._teamHome or self._teamAway:
-                    matchChanges.teamDrawing = True
 
         # Return the changes
         return matchChanges
