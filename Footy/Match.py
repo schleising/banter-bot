@@ -120,49 +120,51 @@ class Match:
                 if self._teamHome or self._teamAway:
                     matchChanges.teamDrew = True
 
-        # Check for a home goal
-        if oldMatch.homeScore < self.homeScore:
-            matchChanges.teamScored = self._teamHome
-            matchChanges.teamConceded = self._teamAway
+        # Only compare old scores if they are not TBD (i.e., we've had at least one update while IN_PLAY)
+        if oldMatch.homeScore != 'TBD' and oldMatch.awayScore != 'TBD':
+            # Check for a home goal
+            if oldMatch.homeScore < self.homeScore:
+                matchChanges.teamScored = self._teamHome
+                matchChanges.teamConceded = self._teamAway
 
-            # If the home team scored, but they're still behind or drawing then they're improving
-            if self.homeScore <= self.awayScore:
-                matchChanges.teamImproving = self._teamHome
-                matchChanges.teamDeclining = self._teamAway
+                # If the home team scored, but they're still behind or drawing then they're improving
+                if self.homeScore <= self.awayScore:
+                    matchChanges.teamImproving = self._teamHome
+                    matchChanges.teamDeclining = self._teamAway
 
-        # Check for home VAR goal reversal
-        elif oldMatch.homeScore > self.homeScore:
-            matchChanges.teamVarAgainst = self._teamHome
-            matchChanges.teamVarFor = self._teamAway
+            # Check for home VAR goal reversal
+            elif oldMatch.homeScore > self.homeScore:
+                matchChanges.teamVarAgainst = self._teamHome
+                matchChanges.teamVarFor = self._teamAway
 
-        # Check for an away goal
-        if oldMatch.awayScore < self.awayScore:
-            matchChanges.teamScored = self._teamAway
-            matchChanges.teamConceded = self._teamHome
+            # Check for an away goal
+            if oldMatch.awayScore < self.awayScore:
+                matchChanges.teamScored = self._teamAway
+                matchChanges.teamConceded = self._teamHome
 
-            # If the away team scored, but they're still behind or drawing then they're improving
-            if self.awayScore <= self.homeScore:
-                matchChanges.teamImproving = self._teamAway
-                matchChanges.teamDeclining = self._teamHome
+                # If the away team scored, but they're still behind or drawing then they're improving
+                if self.awayScore <= self.homeScore:
+                    matchChanges.teamImproving = self._teamAway
+                    matchChanges.teamDeclining = self._teamHome
 
-        # Check for home VAR goal reversal
-        elif oldMatch.awayScore > self.awayScore:
-            matchChanges.teamVarAgainst = self._teamAway
-            matchChanges.teamVarFor = self._teamHome
+            # Check for home VAR goal reversal
+            elif oldMatch.awayScore > self.awayScore:
+                matchChanges.teamVarAgainst = self._teamAway
+                matchChanges.teamVarFor = self._teamHome
 
-        # Check for the home team winning
-        if self.homeScore > self.awayScore:
-            matchChanges.teamWinning = self._teamHome
-            matchChanges.teamLosing = self._teamAway
+            # Check for the home team winning
+            if self.homeScore > self.awayScore:
+                matchChanges.teamWinning = self._teamHome
+                matchChanges.teamLosing = self._teamAway
 
-        # Check for the away team winning
-        elif self.awayScore > self.homeScore:
-            matchChanges.teamWinning = self._teamAway
-            matchChanges.teamLosing = self._teamHome
-        else:
-            # Game is being drawn
-            if self._teamHome or self._teamAway:
-                matchChanges.teamDrawing = True
+            # Check for the away team winning
+            elif self.awayScore > self.homeScore:
+                matchChanges.teamWinning = self._teamAway
+                matchChanges.teamLosing = self._teamHome
+            else:
+                # Game is being drawn
+                if self._teamHome or self._teamAway:
+                    matchChanges.teamDrawing = True
 
         # Return the changes
         return matchChanges
