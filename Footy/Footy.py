@@ -16,7 +16,7 @@ class Footy:
         else:
             # If no team list is given, download the full list of Proemier League teams
             try:
-                response = requests.get(f'https://api.football-data.org//v2/competitions/2021/teams', headers=HEADERS)
+                response = requests.get(f'https://api.football-data.org/v2/competitions/2021/teams', headers=HEADERS)
             except:
                 # In case of download failure return None to allow a retry
                 print('Could not download data')
