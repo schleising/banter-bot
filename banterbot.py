@@ -8,8 +8,8 @@ import logging
 from zoneinfo import ZoneInfo
 
 from pytz import timezone
-from telegram import Bot
-from telegram.ext import Updater, JobQueue, CallbackContext
+from telegram import Bot, Update
+from telegram.ext import Updater, JobQueue, CallbackContext, CommandHandler
 
 from Footy.Footy import Footy
 from Footy.Match import Match
@@ -17,7 +17,7 @@ from Footy.TeamData import teamsToWatch, allTeams, supportedTeamMapping
 import Footy.BantzStrings as BantzStrings
 
 # Set the chat ID
-CHAT_ID = '-701653934'
+CHAT_ID = -701653934
 
 class BanterBot:
     def __init__(self) -> None:
@@ -36,6 +36,9 @@ class BanterBot:
             print('No bot_token.txt file found, you need to put your token from BotFather in here')
             sys.exit()
 
+        # List of chat IDs to respond to
+        self.chatIdList: list[int] = []
+
         # Set the teams we're interested in
         teams = [team for team in teamsToWatch]
 
@@ -49,6 +52,10 @@ class BanterBot:
 
         # Get the dispatcher to register handlers
         self.dp = self.updater.dispatcher
+
+        # On receipt of a /start command call the start() function and /stop command to call the stop() function
+        self.dp.add_handler(CommandHandler('start', self.start))
+        self.dp.add_handler(CommandHandler('stop', self.stop))
 
         # Get the job queue
         self.jq: JobQueue = self.updater.job_queue
@@ -72,6 +79,23 @@ class BanterBot:
         # SIGTERM or SIGABRT. This should be used most of the time, since
         # start_polling() is non-blocking and will stop the bot gracefully.
         self.updater.idle()
+
+    def start(self, update: Update, context: CallbackContext):
+        # Add the chat ID to the list if it isn't already in there
+        if update.message.chat_id not in self.chatIdList:
+            self.chatIdList.append(update.message.chat_id)
+            print(f'Chat ID {update.message.chat_id} added')
+
+    def stop(self, update: Update, context: CallbackContext):
+        # If the user is me
+        if update.message.from_user.first_name == 'Stephen' and update.message.from_user.last_name == 'Schleising':
+            # If the chat ID is in the list remove it
+            if update.message.chat_id in self.chatIdList:
+                self.chatIdList.remove(update.message.chat_id)
+                print(f'Chat ID {update.message.chat_id} removed')
+            else:
+                # Otherwise respond rejecting the request to stop me
+                update.message.reply_text('Only my master can stop me !!', quote=False)
 
     def MatchUpdateHandler(self, context: CallbackContext) -> None:
         # Call get matches, this allows the function to be called directly
@@ -111,9 +135,10 @@ class BanterBot:
         else:
             print('Download Failed')
 
-    def SendMessage(self, bot: Bot, chatId: str, message: Optional[str]):
+    def SendMessage(self, bot: Bot, message: Optional[str]):
         if message is not None:
-            bot.send_message(chat_id=chatId, text=message)
+            for chatId in self.chatIdList:
+                bot.send_message(chat_id=chatId, text=message)
             print(message)
         else:
             print('No Status Change')
@@ -162,7 +187,7 @@ class BanterBot:
                 if message is not None:
                     message = f'{message}\n{newMatchData.GetScoreline()}'
 
-                self.SendMessage(context.bot, CHAT_ID, message)
+                self.SendMessage(context.bot, message)
         else:
             return
 
@@ -175,7 +200,7 @@ class BanterBot:
             ground = allTeams[team]['ground']
 
             # Send the message
-            self.SendMessage(context.bot, CHAT_ID, f'Plenty of empty seats at {ground}')
+            self.SendMessage(context.bot, f'Plenty of empty seats at {ground}')
 
     def SendEasyGame(self, context: CallbackContext) -> None:
         if  context.job is not None and isinstance(context.job.context, str):
@@ -186,7 +211,7 @@ class BanterBot:
             teamName = allTeams[team]['name']
 
             # Send the message
-            self.SendMessage(context.bot, CHAT_ID, f'Should be an easy game for {teamName}')
+            self.SendMessage(context.bot, f'Should be an easy game for {teamName}')
 
     # Log errors
     def error(self, update, context: CallbackContext) -> None:
