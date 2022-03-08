@@ -197,10 +197,11 @@ class BanterBot:
             team = context.job.context
 
             # Get the ground for this tean
-            ground = allTeams[team]['ground']
+            ground = allTeams[team]['ground'] if team in allTeams else None
 
-            # Send the message
-            self.SendMessage(context.bot, f'Plenty of empty seats at {ground}')
+            if ground is not None:
+                # Send the message
+                self.SendMessage(context.bot, f'Plenty of empty seats at {ground}')
 
     def SendEasyGame(self, context: CallbackContext) -> None:
         if  context.job is not None and isinstance(context.job.context, str):
@@ -208,7 +209,7 @@ class BanterBot:
             team = context.job.context
 
             # Get the shorter name for this team
-            teamName = allTeams[team]['name']
+            teamName = allTeams[team]['name'] if team in allTeams else team
 
             # Send the message
             self.SendMessage(context.bot, f'Should be an easy game for {teamName}')

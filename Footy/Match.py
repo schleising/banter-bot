@@ -40,6 +40,8 @@ class Match:
         # Get the home and away team names
         self.homeTeam = matchData['homeTeam']['name']
         self.awayTeam = matchData['awayTeam']['name']
+        self.homeTeamShort = allTeams[self.homeTeam]['name'] if self.homeTeam in allTeams else self.homeTeam
+        self.awayTeamShort = allTeams[self.awayTeam]['name'] if self.awayTeam in allTeams else self.awayTeam
 
         # Get the full time score, replacing None with TBD
         self.homeScore = matchData['score']['fullTime']['homeTeam'] if matchData['score']['fullTime']['homeTeam'] is not None else 'TBD'
@@ -177,7 +179,7 @@ class Match:
 
     def GetScoreline(self) -> str:
         # Create a string for the scoreline
-        return f'{allTeams[self.homeTeam]["name"]} {self.homeScore} - {self.awayScore} {allTeams[self.awayTeam]["name"]}'
+        return f'{self.homeTeamShort} {self.homeScore} - {self.awayScore} {self.awayTeamShort}'
 
     # Convert this match into a string for printing
     def __str__(self) -> str:

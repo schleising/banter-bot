@@ -2,6 +2,7 @@ from datetime import date
 from typing import Optional
 
 import requests
+from requests import Response
 
 from Footy import HEADERS
 from Footy.Match import Match
@@ -44,11 +45,33 @@ class Footy:
 
         # Try to download today's matches
         try:
-            response = requests.get(f'https://api.football-data.org//v2/competitions/2021/matches/?dateFrom={dateFrom}&dateTo={dateTo}', headers=HEADERS)
+            # Get the Premier League games
+            pLresponse = requests.get(f'https://api.football-data.org//v2/competitions/2021/matches/?dateFrom={dateFrom}&dateTo={dateTo}', headers=HEADERS)
+
+            # Get the Champions League games
+            cLResponse = requests.get(f'https://api.football-data.org//v2/competitions/2001/matches/?dateFrom={dateFrom}&dateTo={dateTo}', headers=HEADERS)
         except:
             # In case of download failure return None to allow a retry
             print('Could not download data')
             return None
+
+        # Get the list of Premier League matches and extend the list if not None
+        if (plMatchList := self.GetCompetitionMatchData(pLresponse)) != None:
+            matchList.extend(plMatchList)
+        else:
+            return None
+
+        # Get the list of Champions League matches and extend the list if not None
+        if (clMatchList := self.GetCompetitionMatchData(cLResponse)) != None:
+            matchList.extend(clMatchList)
+        else:
+            return None
+
+        return matchList
+
+    def GetCompetitionMatchData(self, response: Response) -> Optional[list[Match]]:
+        # Initialise an empty list of matches
+        matchList: list[Match] = []
 
         # Check the download status is good
         if response.status_code == requests.codes.ok:
