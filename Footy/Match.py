@@ -18,6 +18,8 @@ class MatchChanges:
     secondHalfStarted: bool = False
     fullTime: bool = False
 
+    goalScored: bool = False
+
     teamWon: bool = False
     teamLost: bool = False
     teamDrew: bool = False
@@ -86,9 +88,6 @@ class Match:
         if oldMatch is not None:
             # Get the match changes
             self.matchChanges = self._CheckStatus(oldMatch)
-
-            # Get the match state
-            self.matchState = oldMatch.matchState.GoalScored(self.teamScore, self.oppositionScore)
         else:
             # initialise the match changes
             self.matchChanges = MatchChanges()
@@ -129,6 +128,13 @@ class Match:
                 # Game was drawn
                 if self._teamHome or self._teamAway:
                     matchChanges.teamDrew = True
+
+        # Check for a goal
+        if self.homeScore != oldMatch.homeScore or self.awayScore != oldMatch.awayScore:
+            matchChanges.goalScored = True
+
+            # Get the new match state
+            self.matchState = oldMatch.matchState.GoalScored(self.teamScore, self.oppositionScore)
 
         # Return the changes
         return matchChanges
