@@ -86,8 +86,12 @@ class Match:
 
         # Get the match changes if the old data is available
         if oldMatch is not None:
+            # Set the match state to the old match state
+            self.matchState = oldMatch.matchState
+
             # Get the match changes
             self.matchChanges = self._CheckStatus(oldMatch)
+
         else:
             # initialise the match changes
             self.matchChanges = MatchChanges()
@@ -134,7 +138,7 @@ class Match:
             matchChanges.goalScored = True
 
             # Get the new match state
-            self.matchState = oldMatch.matchState.GoalScored(self.teamScore, self.oppositionScore)
+            self.matchState = self.matchState.GoalScored(self.teamScore, self.oppositionScore)
 
         # Return the changes
         return matchChanges
