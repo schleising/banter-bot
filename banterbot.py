@@ -199,6 +199,9 @@ class BanterBot:
                     message = f'{message}\n{newMatchData.GetScoreline()}'
 
                 self.SendMessage(context.bot, message)
+            else:
+                # This update failed, try again in 20 seconds using the old match data as the context
+                self.jq.run_once(self.SendScoreUpdates, 20, context=oldMatchData)
         else:
             return
 
