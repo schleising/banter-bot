@@ -19,13 +19,13 @@ supportedTeamMapping = {
         'name': 'Man City',
         'ground': 'the City of Manchester Stadium',
     },
+}
+
+unsupportedTeamMapping = {
     'Arsenal FC': {
         'name': 'Arsenal',
         'ground': 'the Emirates',
     },
-}
-
-unsupportedTeamMapping = {
     'Aston Villa FC': {
         'name': 'Villa',
         'ground': 'Villa Park',
