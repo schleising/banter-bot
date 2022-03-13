@@ -14,6 +14,15 @@ from telegram.ext import Updater, JobQueue, CallbackContext, CommandHandler
 from Footy.Footy import Footy
 from Footy.Match import Match
 from Footy.TeamData import teamsToWatch, allTeams, supportedTeamMapping
+from Footy.MatchStates import (
+    Drawing,
+    TeamLeadByOne, 
+    TeamExtendingLead,
+    TeamLosingLead,
+    TeamDeficitOfOne,
+    TeamExtendingDeficit,
+    TeamLosingDeficit
+)
 import Footy.BantzStrings as BantzStrings
 
 # Set the chat ID
@@ -162,26 +171,28 @@ class BanterBot:
                         message = BantzStrings.teamLost[random.randint(0, len(BantzStrings.teamLost ) - 1)].format(**teamDict)
                     if newMatchData.matchChanges.teamDrew:
                         message = BantzStrings.teamDrew[random.randint(0, len(BantzStrings.teamDrew ) - 1)].format(**teamDict)
+                elif newMatchData.matchChanges.firstHalfStarted:
+                    message = BantzStrings.teamMatchStarted[random.randint(0, len(BantzStrings.teamMatchStarted ) - 1)].format(**teamDict)
                 else:
-                    if newMatchData.matchChanges.firstHalfStarted:
-                        message = BantzStrings.teamMatchStarted[random.randint(0, len(BantzStrings.teamMatchStarted ) - 1)].format(**teamDict)
                     # Check for a goal
-                    if newMatchData.matchChanges.teamExtendingLead:
-                        message = BantzStrings.teamExtendingLead[random.randint(0, len(BantzStrings.teamExtendingLead) - 1)].format(**teamDict)
-                    if newMatchData.matchChanges.teamLeadBeingCut:
-                        message = BantzStrings.teamLeadBeingCut[random.randint(0, len(BantzStrings.teamLeadBeingCut) - 1)].format(**teamDict)
-                    if newMatchData.matchChanges.teamClosingGap:
-                        message = BantzStrings.teamClosingGap[random.randint(0, len(BantzStrings.teamClosingGap) - 1)].format(**teamDict)
-                    if newMatchData.matchChanges.teamDeficitGettingBigger:
-                        message = BantzStrings.teamDeficitGettingBigger[random.randint(0, len(BantzStrings.teamDeficitGettingBigger) - 1)].format(**teamDict)
-                    if newMatchData.matchChanges.teamVarAgainst:
-                        message = BantzStrings.teamVarAgainst[random.randint(0, len(BantzStrings.teamVarAgainst) - 1)].format(**teamDict)
-                    if newMatchData.matchChanges.teamVarFor:
-                        message = BantzStrings.teamVarFor[random.randint(0, len(BantzStrings.teamVarFor) - 1)].format(**teamDict)
+                    match newMatchData.matchState:
+                        case Drawing():
+                            message = BantzStrings.drawing[random.randint(0, len(BantzStrings.drawing) - 1)].format(**teamDict)
+                        case TeamLeadByOne():
+                            message = BantzStrings.teamLeadByOne[random.randint(0, len(BantzStrings.teamLeadByOne) - 1)].format(**teamDict)
+                        case TeamExtendingLead():
+                            message = BantzStrings.teamExtendingLead[random.randint(0, len(BantzStrings.teamExtendingLead) - 1)].format(**teamDict)
+                        case TeamLosingLead():
+                            message = BantzStrings.teamLosingLead[random.randint(0, len(BantzStrings.teamLosingLead) - 1)].format(**teamDict)
+                        case TeamDeficitOfOne():
+                            message = BantzStrings.teamDeficitOfOne[random.randint(0, len(BantzStrings.teamDeficitOfOne) - 1)].format(**teamDict)
+                        case TeamExtendingDeficit():
+                            message = BantzStrings.teamExtendingDeficit[random.randint(0, len(BantzStrings.teamExtendingDeficit) - 1)].format(**teamDict)
+                        case TeamLosingDeficit():
+                            message = BantzStrings.teamLosingDeficit[random.randint(0, len(BantzStrings.teamLosingDeficit) - 1)].format(**teamDict)
 
                     # Add a job to check the scores again in 20 seconds
-                    matchContext = newMatchData
-                    self.jq.run_once(self.SendScoreUpdates, 20, context=matchContext)
+                    self.jq.run_once(self.SendScoreUpdates, 20, context=newMatchData)
 
                 # If there is a message, add the scoreline
                 if message is not None:

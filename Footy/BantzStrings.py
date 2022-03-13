@@ -2,44 +2,32 @@ teamMatchStarted: list[str] = [
     '{name} match started'
 ]
 
-teamScored: list[str] = [
-    '{name} scored'
+drawing: list[str] = [
+    '{name} drawing'
 ]
 
-teamConceded: list[str] = [
-    '{name} conceded'
-]
-
-teamWinning: list[str] = [
-    '{name} winning'
-]
-
-teamLosing: list[str] = [
-    '{name} losing'
+teamLeadByOne: list[str] = [
+    '{name} lead by one'
 ]
 
 teamExtendingLead: list[str] = [
-    '{name} extending lead',
+    '{name} extending lead'
 ]
 
-teamLeadBeingCut: list[str] = [
-    '{name} lead being cut'
+teamLosingLead: list[str] = [
+    '{name} losing lead'
 ]
 
-teamClosingGap: list[str] = [
-    '{name} closing gap',
+teamDeficitOfOne: list[str] = [
+    '{name} deficit of one'
 ]
 
-teamDeficitGettingBigger: list[str] = [
-    '{name} deficit getting bigger'
+teamExtendingDeficit: list[str] = [
+    '{name} extending deficit'
 ]
 
-teamVarFor: list[str] = [
-    'VAR Decision for {name}'
-]
-
-teamVarAgainst: list[str] = [
-    'VAR Decision against {name}'
+teamLosingDeficit: list[str] = [
+    '{name} losing deficit'
 ]
 
 teamWon: list[str] = [

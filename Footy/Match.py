@@ -8,6 +8,7 @@ from pytz import timezone
 from dateparser import parse
 
 import Footy.MatchStatus as MatchStatus
+from Footy.MatchStates import MatchState
 from Footy.TeamData import supportedTeamMapping, allTeams
 
 @dataclass
@@ -17,17 +18,6 @@ class MatchChanges:
     secondHalfStarted: bool = False
     fullTime: bool = False
 
-    teamScored: bool = False
-    teamConceded: bool = False
-    teamWinning: bool = False
-    teamLosing: bool = False
-    teamExtendingLead: bool = False
-    teamLeadBeingCut: bool = False
-    teamClosingGap: bool = False
-    teamDeficitGettingBigger: bool = False
-    teamVarFor: bool = False
-    teamVarAgainst: bool = False
-    teamDrawing: bool = False
     teamWon: bool = False
     teamLost: bool = False
     teamDrew: bool = False
@@ -44,8 +34,8 @@ class Match:
         self.awayTeamShort = allTeams[self.awayTeam]['name'] if self.awayTeam in allTeams else self.awayTeam
 
         # Get the full time score, replacing None with TBD
-        self.homeScore = matchData['score']['fullTime']['homeTeam'] if matchData['score']['fullTime']['homeTeam'] is not None else 'TBD'
-        self.awayScore = matchData['score']['fullTime']['awayTeam'] if matchData['score']['fullTime']['awayTeam'] is not None else 'TBD'
+        self.homeScore = int(matchData['score']['fullTime']['homeTeam']) if matchData['score']['fullTime']['homeTeam'] is not None else 'TBD'
+        self.awayScore = int(matchData['score']['fullTime']['awayTeam']) if matchData['score']['fullTime']['awayTeam'] is not None else 'TBD'
 
         # Get and parse the match date and time, times are all UTC, so make sure the datetime is aware
         matchDate = parse(matchData['utcDate'])
@@ -84,11 +74,27 @@ class Match:
         else:
             self.supportedTeamPlayingSupportedTeam = False
 
+        # Set the team and opposition scores
+        if self.homeScore != 'TBD' and self.awayScore != 'TBD':
+            self.teamScore = self.homeScore if self._teamHome else self.awayScore
+            self.oppositionScore = self.awayScore if self._teamHome else self.homeScore
+        else:
+            self.teamScore = 0
+            self.oppositionScore = 0
+
         # Get the match changes if the old data is available
         if oldMatch is not None:
+            # Get the match changes
             self.matchChanges = self._CheckStatus(oldMatch)
+
+            # Get the match state
+            self.matchState = oldMatch.matchState.GoalScored(self.teamScore, self.oppositionScore)
         else:
+            # initialise the match changes
             self.matchChanges = MatchChanges()
+
+            # initialise the match state
+            self.matchState = MatchState(0, 0).FindState()
 
     def _CheckStatus(self, oldMatch: Match) -> MatchChanges:
         # Check for various state changes in the match
@@ -111,68 +117,18 @@ class Match:
             matchChanges.fullTime = True
 
             # Check for the home team winning
-            if self.homeScore > self.awayScore:
-                matchChanges.teamWon = self._teamHome
-                matchChanges.teamLost = self._teamAway
+            if self.teamScore > self.oppositionScore:
+                matchChanges.teamWon = True
+                matchChanges.teamLost = False
 
             # Check for the away team winning
-            elif self.homeScore < self.awayScore:
-                matchChanges.teamWon = self._teamAway
-                matchChanges.teamLost = self._teamHome
+            elif self.teamScore < self.oppositionScore:
+                matchChanges.teamWon = False
+                matchChanges.teamLost = True
             else:
                 # Game was drawn
                 if self._teamHome or self._teamAway:
                     matchChanges.teamDrew = True
-
-        # Only compare old scores if they are not TBD (i.e., we've had at least one update while IN_PLAY)
-        if oldMatch.homeScore != 'TBD' and oldMatch.awayScore != 'TBD':
-            # Check for a home goal
-            if oldMatch.homeScore < self.homeScore:
-                matchChanges.teamScored = self._teamHome
-                matchChanges.teamConceded = self._teamAway
-
-                # If the home team scored, but they're still behind or drawing then they're improving
-                if self.homeScore < self.awayScore:
-                    matchChanges.teamClosingGap = self._teamHome
-                    matchChanges.teamDeficitGettingBigger = self._teamAway
-                    matchChanges.teamWinning = self._teamAway
-                    matchChanges.teamLosing = self._teamHome
-                elif self.homeScore > self.awayScore:
-                    matchChanges.teamExtendingLead = self._teamHome
-                    matchChanges.teamLeadBeingCut = self._teamAway
-                    matchChanges.teamWinning = self._teamHome
-                    matchChanges.teamLosing = self._teamAway
-                else:
-                    matchChanges.teamDrawing = True
-
-            # Check for home VAR goal reversal
-            elif oldMatch.homeScore > self.homeScore:
-                matchChanges.teamVarAgainst = self._teamHome
-                matchChanges.teamVarFor = self._teamAway
-
-            # Check for an away goal
-            if oldMatch.awayScore < self.awayScore:
-                matchChanges.teamScored = self._teamAway
-                matchChanges.teamConceded = self._teamHome
-
-                # If the home team scored, but they're still behind or drawing then they're improving
-                if self.awayScore < self.homeScore:
-                    matchChanges.teamClosingGap = self._teamAway
-                    matchChanges.teamDeficitGettingBigger = self._teamHome
-                    matchChanges.teamWinning = self._teamHome
-                    matchChanges.teamLosing = self._teamAway
-                elif self.awayScore > self.homeScore:
-                    matchChanges.teamExtendingLead = self._teamAway
-                    matchChanges.teamLeadBeingCut = self._teamHome
-                    matchChanges.teamWinning = self._teamAway
-                    matchChanges.teamLosing = self._teamHome
-                else:
-                    matchChanges.teamDrawing = True
-
-            # Check for home VAR goal reversal
-            elif oldMatch.awayScore > self.awayScore:
-                matchChanges.teamVarAgainst = self._teamAway
-                matchChanges.teamVarFor = self._teamHome
 
         # Return the changes
         return matchChanges
