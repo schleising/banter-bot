@@ -31,7 +31,7 @@ assert(isinstance(matchState, TeamLosingLead))
 
 matchState = matchState.GoalScored(3, 2)
 print(matchState)
-assert(isinstance(matchState, TeamLeadByOne))
+assert(isinstance(matchState, TeamLosingLead))
 
 matchState = matchState.GoalScored(3, 3)
 print(matchState)
@@ -55,7 +55,7 @@ assert(isinstance(matchState, TeamLosingDeficit))
 
 matchState = matchState.GoalScored(5, 6)
 print(matchState)
-assert(isinstance(matchState, TeamDeficitOfOne))
+assert(isinstance(matchState, TeamLosingDeficit))
 
 matchState = matchState.GoalScored(6, 6)
 print(matchState)

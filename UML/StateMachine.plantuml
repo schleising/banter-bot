@@ -6,36 +6,34 @@ In_play --> Drawing: MatchStarted
 Drawing --> Finished: MatchEnded
 
 state TeamWinning {
-    Drawing --> TeamLeadByOne: TeamScoredDiff1
+    Drawing --> TeamLeadByOne: TeamScored
     
     TeamLeadByOne --> Drawing: TeamConceded
     TeamLeadByOne --> TeamExtendingLead: TeamScored
     TeamLeadByOne --> Finished: MatchEnded
 
-    TeamExtendingLead --> TeamLeadByOne: TeamConcededDiff1
     TeamExtendingLead --> TeamLosingLead: TeamConceded
     TeamExtendingLead --> TeamExtendingLead: TeamScored
     TeamExtendingLead --> Finished: MatchEnded
 
-    TeamLosingLead --> TeamLeadByOne: TeamConcededDiff1
+    TeamLosingLead --> Drawing: TeamConceded
     TeamLosingLead --> TeamLosingLead: TeamConceded
     TeamLosingLead --> TeamExtendingLead: TeamScored
     TeamLosingLead --> Finished: MatchEnded
 }
 
 state TeamLosing {
-    Drawing --> TeamDeficitOfOne: TeamConcededDiff1
+    Drawing --> TeamDeficitOfOne: TeamConceded
     
     TeamDeficitOfOne --> Drawing: TeamScored
     TeamDeficitOfOne --> TeamExtendingDeficit: TeamConceded
     TeamDeficitOfOne --> Finished: MatchEnded
 
     TeamExtendingDeficit --> TeamLosingDeficit: TeamScored
-    TeamExtendingDeficit --> TeamDeficitOfOne: TeamConcededDiff1
     TeamExtendingDeficit --> TeamExtendingDeficit: TeamConceded
     TeamExtendingDeficit --> Finished: Match Ended
 
-    TeamLosingDeficit --> TeamDeficitOfOne: TeamScoredDiff1
+    TeamLosingDeficit --> Drawing: TeamConceded
     TeamLosingDeficit --> TeamLosingDeficit: TeamScored
     TeamLosingDeficit --> TeamExtendingDeficit: TeamConceded
     TeamLosingDeficit --> Finished: MatchEnded
