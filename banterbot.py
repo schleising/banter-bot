@@ -13,7 +13,7 @@ from telegram.ext import Updater, JobQueue, CallbackContext, CommandHandler
 
 from Footy.Footy import Footy
 from Footy.Match import Match
-from Footy.TeamData import teamsToWatch, allTeams, supportedTeamMapping
+from Footy.TeamData import teamsToWatch, allTeams
 from Footy.MatchStates import (
     Drawing,
     TeamLeadByOne, 
@@ -137,7 +137,7 @@ class BanterBot:
 
                 if (match.matchDate + timedelta(minutes=5)) > datetime.now(ZoneInfo('UTC')):
                     # If this is a home game for one of the teams we're interested in, add the empty seats message
-                    if match.homeTeam in supportedTeamMapping:
+                    if match.homeTeam in teamsToWatch:
                         # Add a job to send the empty seats message 5 minutes after the game starts
                         self.jq.run_once(self.SendEmptySeats, match.matchDate + timedelta(minutes=5), context=teamContext)
         else:

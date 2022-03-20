@@ -9,8 +9,9 @@ from dateparser import parse
 
 import Footy.MatchStatus as MatchStatus
 from Footy.MatchStates import MatchState
-from Footy.TeamData import supportedTeamMapping, allTeams
-import Footy.UnsupportedBantzStrings as UnsupportedBantzStrings
+from Footy.TeamData import myTeamMapping, teamsToWatch, allTeams
+from Footy import SupportedBantzStrings
+from Footy import UnsupportedBantzStrings
 
 @dataclass
 class MatchChanges:
@@ -58,10 +59,10 @@ class Match:
         self.status = matchData['status']
 
         # Set whether my team is home or away
-        if self.homeTeam in supportedTeamMapping:
+        if self.homeTeam in teamsToWatch:
             self._teamHome = True
             self._teamAway = False
-        elif self.awayTeam in supportedTeamMapping:
+        elif self.awayTeam in teamsToWatch:
             self._teamHome = False
             self._teamAway = True
         else:
@@ -100,7 +101,10 @@ class Match:
             # initialise the match state
             self.matchState = MatchState(0, 0).FindState()
 
-        self.bantzStrings = UnsupportedBantzStrings
+        if self.teamName in myTeamMapping:
+            self.bantzStrings = SupportedBantzStrings
+        else:
+            self.bantzStrings = UnsupportedBantzStrings
 
     def _CheckStatus(self, oldMatch: Match) -> MatchChanges:
         # Check for various state changes in the match
