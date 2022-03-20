@@ -23,7 +23,6 @@ from Footy.MatchStates import (
     TeamExtendingDeficit,
     TeamLosingDeficit
 )
-import Footy.BantzStrings as BantzStrings
 
 # Set the chat ID
 CHAT_ID = -701653934
@@ -166,31 +165,31 @@ class BanterBot:
                 # Check if this is the start of the match
                 if newMatchData.matchChanges.fullTime:
                     if newMatchData.matchChanges.teamWon:
-                        message = BantzStrings.teamWon[random.randint(0, len(BantzStrings.teamWon ) - 1)].format(**teamDict)
+                        message = newMatchData.bantzStrings.teamWon[random.randint(0, len(newMatchData.bantzStrings.teamWon ) - 1)].format(**teamDict)
                     if newMatchData.matchChanges.teamLost:
-                        message = BantzStrings.teamLost[random.randint(0, len(BantzStrings.teamLost ) - 1)].format(**teamDict)
+                        message = newMatchData.bantzStrings.teamLost[random.randint(0, len(newMatchData.bantzStrings.teamLost ) - 1)].format(**teamDict)
                     if newMatchData.matchChanges.teamDrew:
-                        message = BantzStrings.teamDrew[random.randint(0, len(BantzStrings.teamDrew ) - 1)].format(**teamDict)
+                        message = newMatchData.bantzStrings.teamDrew[random.randint(0, len(newMatchData.bantzStrings.teamDrew ) - 1)].format(**teamDict)
                 else:
                     if newMatchData.matchChanges.firstHalfStarted:
-                        message = BantzStrings.teamMatchStarted[random.randint(0, len(BantzStrings.teamMatchStarted ) - 1)].format(**teamDict)
+                        message = newMatchData.bantzStrings.teamMatchStarted[random.randint(0, len(newMatchData.bantzStrings.teamMatchStarted ) - 1)].format(**teamDict)
                     elif newMatchData.matchChanges.goalScored:
                         # Check for a goal
                         match newMatchData.matchState:
                             case Drawing():
-                                message = BantzStrings.drawing[random.randint(0, len(BantzStrings.drawing) - 1)].format(**teamDict)
+                                message = newMatchData.bantzStrings.drawing[random.randint(0, len(newMatchData.bantzStrings.drawing) - 1)].format(**teamDict)
                             case TeamLeadByOne():
-                                message = BantzStrings.teamLeadByOne[random.randint(0, len(BantzStrings.teamLeadByOne) - 1)].format(**teamDict)
+                                message = newMatchData.bantzStrings.teamLeadByOne[random.randint(0, len(newMatchData.bantzStrings.teamLeadByOne) - 1)].format(**teamDict)
                             case TeamExtendingLead():
-                                message = BantzStrings.teamExtendingLead[random.randint(0, len(BantzStrings.teamExtendingLead) - 1)].format(**teamDict)
+                                message = newMatchData.bantzStrings.teamExtendingLead[random.randint(0, len(newMatchData.bantzStrings.teamExtendingLead) - 1)].format(**teamDict)
                             case TeamLosingLead():
-                                message = BantzStrings.teamLosingLead[random.randint(0, len(BantzStrings.teamLosingLead) - 1)].format(**teamDict)
+                                message = newMatchData.bantzStrings.teamLosingLead[random.randint(0, len(newMatchData.bantzStrings.teamLosingLead) - 1)].format(**teamDict)
                             case TeamDeficitOfOne():
-                                message = BantzStrings.teamDeficitOfOne[random.randint(0, len(BantzStrings.teamDeficitOfOne) - 1)].format(**teamDict)
+                                message = newMatchData.bantzStrings.teamDeficitOfOne[random.randint(0, len(newMatchData.bantzStrings.teamDeficitOfOne) - 1)].format(**teamDict)
                             case TeamExtendingDeficit():
-                                message = BantzStrings.teamExtendingDeficit[random.randint(0, len(BantzStrings.teamExtendingDeficit) - 1)].format(**teamDict)
+                                message = newMatchData.bantzStrings.teamExtendingDeficit[random.randint(0, len(newMatchData.bantzStrings.teamExtendingDeficit) - 1)].format(**teamDict)
                             case TeamLosingDeficit():
-                                message = BantzStrings.teamLosingDeficit[random.randint(0, len(BantzStrings.teamLosingDeficit) - 1)].format(**teamDict)
+                                message = newMatchData.bantzStrings.teamLosingDeficit[random.randint(0, len(newMatchData.bantzStrings.teamLosingDeficit) - 1)].format(**teamDict)
 
                     # Add a job to check the scores again in 20 seconds
                     self.jq.run_once(self.SendScoreUpdates, 20, context=newMatchData)

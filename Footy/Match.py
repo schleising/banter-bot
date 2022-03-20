@@ -10,6 +10,7 @@ from dateparser import parse
 import Footy.MatchStatus as MatchStatus
 from Footy.MatchStates import MatchState
 from Footy.TeamData import supportedTeamMapping, allTeams
+import Footy.UnsupportedBantzStrings as UnsupportedBantzStrings
 
 @dataclass
 class MatchChanges:
@@ -98,6 +99,8 @@ class Match:
 
             # initialise the match state
             self.matchState = MatchState(0, 0).FindState()
+
+        self.bantzStrings = UnsupportedBantzStrings
 
     def _CheckStatus(self, oldMatch: Match) -> MatchChanges:
         # Check for various state changes in the match
