@@ -128,7 +128,7 @@ class BanterBot:
                 # If the match is in the future
                 if (match.matchDate - timedelta(minutes=5)) > datetime.now(ZoneInfo('UTC')):
                     # Add a job to send a message that this should be an easy game 5 minutes before the game starts
-                    self.jq.run_once(self.SendEasyGame, match.matchDate - timedelta(minutes=5), context=teamContext)
+                    self.jq.run_once(self.SendEasyWin, match.matchDate - timedelta(minutes=5), context=teamContext)
 
                 # Add a job to check the scores once the game starts
                 matchContext = match
@@ -217,7 +217,7 @@ class BanterBot:
                 # Send the message
                 self.SendMessage(context.bot, f'Plenty of empty seats at {ground}')
 
-    def SendEasyGame(self, context: CallbackContext) -> None:
+    def SendEasyWin(self, context: CallbackContext) -> None:
         if  context.job is not None and isinstance(context.job.context, str):
             # Get the full name for this team
             team = context.job.context
@@ -226,7 +226,7 @@ class BanterBot:
             teamName = allTeams[team]['name'] if team in allTeams else team
 
             # Send the message
-            self.SendMessage(context.bot, f'Should be an easy game for {teamName}')
+            self.SendMessage(context.bot, f'Should be an easy win for {teamName}')
 
     # Log errors
     def error(self, update, context: CallbackContext) -> None:
