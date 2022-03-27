@@ -204,7 +204,7 @@ class BanterBot:
 
                 # If there is a message, add the scoreline
                 if message is not None:
-                    message = f'{message}\n{newMatchData.GetScoreline()}'
+                    message = f'{message}'
 
                 self.SendMessage(context.bot, message)
             else:
