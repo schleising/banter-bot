@@ -64,6 +64,7 @@ class BanterBot:
         # On receipt of a /start command call the start() function and /stop command to call the stop() function
         self.dp.add_handler(CommandHandler('start', self.start))
         self.dp.add_handler(CommandHandler('stop', self.stop))
+        self.dp.add_handler(CommandHandler('add', self.add))
 
         # Get the job queue
         self.jq: JobQueue = self.updater.job_queue
@@ -104,6 +105,13 @@ class BanterBot:
             else:
                 # Otherwise respond rejecting the request to stop me
                 update.message.reply_text('Only my master can stop me !!', quote=False)
+
+    def add(self, update: Update, context: CallbackContext):
+        # If the user is me
+        if update.message.from_user.first_name == 'Stephen' and update.message.from_user.last_name == 'Schleising':
+            if update.message.chat_id not in self.chatIdList:
+                self.chatIdList.append(update.message.chat_id)
+                print(f'Chat ID {update.message.chat_id} added')
 
     def MatchUpdateHandler(self, context: CallbackContext) -> None:
         # Call get matches, this allows the function to be called directly
