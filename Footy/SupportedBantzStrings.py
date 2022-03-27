@@ -1,3 +1,6 @@
+# {team} -> Name of team
+# {name} -> Name of person who supports team
+
 teamMatchStarted: list[str] = [
     "Come on {team} !!",
     "{team} are the greatest team in the world",
@@ -54,6 +57,7 @@ teamWon: list[str] = [
     "Job done, three points",
     "Another easy win for {team}",
     "Justice !!",
+    "I've got no internet, can someone tell me who won?",
 ]
 
 teamLost: list[str] = [
