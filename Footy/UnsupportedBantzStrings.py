@@ -17,6 +17,8 @@ drawing: list[str] = [
     "How can you support this rubbish, {name}?",
     "You get the feeling that {team} don't really want this",
     "No passion from {team}, {name}",
+    "If a game of football is like making love to a beautiful woman, this is a £10 hand job from a swivel-eyed misfit",
+    "This is like a game of chess. But with more players and only one piece",
 ]
 
 teamLeadByOne: list[str] = [
@@ -47,6 +49,7 @@ teamExtendingLead: list[str] = [
     "That was so offside",
     "VAR!",
     "Is the linesman OK?",
+    "If only {name}'s wife was as dirty as this game",
 ]
 
 teamLosingLead: list[str] = [
@@ -55,6 +58,10 @@ teamLosingLead: list[str] = [
     "{team} are rubbish",
     "{team} fucking it up again",
     "We really are being treated to some world class flouncing from {team} today",
+    "Brace yourself, {name}. This is going to hurt",
+    "This is brown trouser time for {team}",
+    "I hope {name} brought a spare pair of underpants",
+    "I see {team} are playing their B Team. B for Bullshit",
 ]
 
 teamDeficitOfOne: list[str] = [
@@ -81,6 +88,7 @@ teamExtendingDeficit: list[str] = [
     "A team like {team} have such a proud history, but what we see today is just embarrassing",
     "{team} clearly not up for it today",
     "{team} are letting you down, {name}",
+    "It's like watching a bunch of cavemen: Neanderthal",
 ]
 
 teamLosingDeficit: list[str] = [
@@ -89,12 +97,14 @@ teamLosingDeficit: list[str] = [
     "The ref's a cunt",
     "This is awful",
     "What a mess",
+    "Well this is an unmitigated shit show",
 ]
 
 teamWon: list[str] = [
     "That was a shit game",
     "There's no way {team} deserved that",
     "Fuck you, {name} !!",
+    "This will go down in history.\nAs the most tedious game I have ever had the misfortune to witness",
 ]
 
 teamLost: list[str] = [
