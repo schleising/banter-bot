@@ -30,6 +30,7 @@ teamLeadByOne: list[str] = [
     "Lucky goal for {team}",
     "{team} got lucky there",
     "{team} aren't good enough to stay ahead",
+    "Offside!",
 ]
 
 teamExtendingLead: list[str] = [
@@ -43,6 +44,9 @@ teamExtendingLead: list[str] = [
     "At least Boris remains in charge, we've still got that",
     "Richard Wanger would be turning in his grave",
     "Liberal elite bullshit",
+    "That was so offside",
+    "VAR!",
+    "Is the linesman OK?",
 ]
 
 teamLosingLead: list[str] = [
@@ -81,6 +85,8 @@ teamLosingDeficit: list[str] = [
     "Too little too late for {team}",
     "{team} won't come back from here",
     "The ref's a cunt",
+    "This is awful",
+    "What a mess",
 ]
 
 teamWon: list[str] = [

@@ -16,7 +16,8 @@ teamLeadByOne: list[str] = [
     "{team} take the lead, deserved, obviously",
     "That was a fucking great goal !!",
     "What a fucking team {team} are !!",
-    "No better team than {team}"
+    "No better team than {team}",
+    "Yes, {team}!",
 ]
 
 teamExtendingLead: list[str] = [
@@ -24,6 +25,7 @@ teamExtendingLead: list[str] = [
     "{team} cruising to victory",
     "This is incredible from {team}",
     "Easy",
+    "Back of the net!",
 ]
 
 teamLosingLead: list[str] = [
@@ -31,6 +33,7 @@ teamLosingLead: list[str] = [
     "The ref's been paid off",
     "The ref's fucking it up again",
     "Everyone cheats against {team}",
+    "Where are you?!",
 ]
 
 teamDeficitOfOne: list[str] = [
