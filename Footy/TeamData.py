@@ -21,7 +21,7 @@ supportedTeamMapping = {
     'Liverpool FC': {
         'team': 'Liverpool',
         'ground': 'Anfield',
-        'name': 'Stevia',
+        'name': 'Stevie',
     },
 }
 
