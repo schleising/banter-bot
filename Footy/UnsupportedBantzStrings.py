@@ -50,9 +50,11 @@ teamExtendingLead: list[str] = [
 ]
 
 teamLosingLead: list[str] = [
+    "Lazy old {team}, lazy old {name}",
     "{team} are throwing it away",
     "{team} are rubbish",
     "{team} fucking it up again",
+    "We really are being treated to some world class flouncing from {team} today",
 ]
 
 teamDeficitOfOne: list[str] = [
@@ -103,6 +105,7 @@ teamLost: list[str] = [
     "Probably the best {team} could hope for",
     "Everything OK, {name}?",
     "{team} continue to disappoint",
+    "Well if the football thing doesn't work out for {team}, they can always consider a career on the stage",
     "{team} set the bar low",
     "{team} fail to meet their already low expectations",
 ]
