@@ -1,90 +1,110 @@
 # Map team names and stadiums
 myTeamMapping = {
     'Manchester City FC': {
-        'name': 'Man City',
+        'team': 'Man City',
         'ground': 'the City of Manchester Stadium',
+        'name': 'Mani',
     },
 }
 
 supportedTeamMapping = {
     'Tottenham Hotspur FC': {
-        'name': 'Tottenham',
+        'team': 'Tottenham',
         'ground': "Tottenham Hotspur Sainsbury's NFL Superstore",
+        'name': 'Thommo',
     },
     'Chelsea FC': {
-        'name': 'Chelsea',
+        'team': 'Chelsea',
         'ground': 'Stamford Bridge',
+        'name': 'Tim',
     },
     'Liverpool FC': {
-        'name': 'Liverpool',
+        'team': 'Liverpool',
         'ground': 'Anfield',
+        'name': 'Stevia',
     },
 }
 
 unsupportedTeamMapping = {
     'Arsenal FC': {
-        'name': 'Arsenal',
+        'team': 'Arsenal',
         'ground': 'the Emirates',
+        'name': '',
     },
     'Aston Villa FC': {
-        'name': 'Villa',
+        'team': 'Villa',
         'ground': 'Villa Park',
+        'name': '',
     },
     'Everton FC': {
-        'name': 'Everton',
+        'team': 'Everton',
         'ground': 'Goodison',
+        'name': '',
     },
     'Manchester United FC': {
-        'name': 'Man United',
+        'team': 'Man United',
         'ground': 'Old  Trafford',
+        'name': '',
     },
     'Newcastle United FC': {
-        'name': 'Newcastle',
+        'team': 'Newcastle',
         'ground': "St James's Park",
+        'name': '',
     },
     'Norwich City FC': {
-        'name': 'Norwich',
+        'team': 'Norwich',
         'ground': 'Carrow Road',
+        'name': '',
     },
     'Wolverhampton Wanderers FC': {
-        'name': 'Wolves',
+        'team': 'Wolves',
         'ground': 'Molineux',
+        'name': '',
     },
     'Burnley FC': {
-        'name': 'Burnley',
+        'team': 'Burnley',
         'ground': 'Turf Moor',
+        'name': '',
     },
     'Leicester City FC': {
-        'name': 'Leicester',
+        'team': 'Leicester',
         'ground': 'the King Power Stadium',
+        'name': '',
     },
     'Southampton FC': {
-        'name': 'Southampton',
+        'team': 'Southampton',
         'ground': "St Mary's",
+        'name': '',
     },
     'Leeds United FC': {
-        'name': 'Leeds',
+        'team': 'Leeds',
         'ground': 'Elland Road',
+        'name': '',
     },
     'Watford FC': {
-        'name': 'Watford',
+        'team': 'Watford',
         'ground': 'Vicarage Road',
+        'name': '',
     },
     'Crystal Palace FC': {
-        'name': 'Palace',
+        'team': 'Palace',
         'ground': 'Selhurst Park',
+        'name': '',
     },
     'Brighton & Hove Albion FC': {
-        'name': 'Brighton',
+        'team': 'Brighton',
         'ground': 'the Amex',
+        'name': '',
     },
     'Brentford FC': {
-        'name': 'Brentford',
+        'team': 'Brentford',
         'ground': 'the Brentford Community Stadium',
+        'name': '',
     },
     'West Ham United FC': {
-        'name': 'West Ham',
+        'team': 'West Ham',
         'ground': 'the London Stadium',
+        'name': '',
     },
 }
 

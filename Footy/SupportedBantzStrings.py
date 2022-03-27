@@ -1,62 +1,69 @@
 teamMatchStarted: list[str] = [
-    "Come on {name} !!",
-    "{name} are the greatest team in the world",
+    "Come on {team} !!",
+    "{team} are the greatest team in the world",
 ]
 
 drawing: list[str] = [
-    "{name} winning this match, morally",
-    "{name} should still win this",
+    "{team} winning this match, morally",
+    "{team} should still win this",
+    "{team} still clearly the best team",
 ]
 
 teamLeadByOne: list[str] = [
-    "{name} take the lead, deserved, obviously",
+    "{team} take the lead, deserved, obviously",
     "That was a fucking great goal !!",
+    "What a fucking team {team} are !!",
+    "No better team than {team}"
 ]
 
 teamExtendingLead: list[str] = [
-    "{name} deserve this lead",
-    "{name} cruising to victory",
-    "This is incredible from {name}",
+    "{team} deserve this lead",
+    "{team} cruising to victory",
+    "This is incredible from {team}",
     "Easy",
 ]
 
 teamLosingLead: list[str] = [
-    "Not worried, {name} should still win",
+    "Not worried, {team} should still win",
     "The ref's been paid off",
     "The ref's fucking it up again",
+    "Everyone cheats against {team}",
 ]
 
 teamDeficitOfOne: list[str] = [
-    "Come on {name} !!  We can pull this back",
+    "Come on {team} !!  We can pull this back",
     "That was never a goal",
     "Fucking bullshit !!",
+    "Cunts",
 ]
 
 teamExtendingDeficit: list[str] = [
     "Fuck the patriarchy !!",
     "More bullshit",
     "We can still do this",
+    "Cunts",
 ]
 
 teamLosingDeficit: list[str] = [
     "Back in the game",
-    "{name} pulling it back",
-    "Yes !!  Come on {name} !!",
+    "{team} pulling it back",
+    "Yes !!  Come on {team} !!",
 ]
 
 teamWon: list[str] = [
     "Job done, three points",
-    "Another easy win for {name}",
+    "Another easy win for {team}",
     "Justice !!",
 ]
 
 teamLost: list[str] = [
     "That was definitely fixed",
     "Utter bullshit",
-    "Everyone's so biased against {name}",
+    "Everyone's so biased against {team}",
 ]
 
 teamDrew: list [str] = [
     "Good result that, we'll take it",
     "Another point, that'll do",
+    "Good result",
 ]
