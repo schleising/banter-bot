@@ -23,6 +23,11 @@ supportedTeamMapping = {
         'ground': 'Anfield',
         'name': 'Stevie',
     },
+    'Brighton & Hove Albion FC': {
+        'team': 'Brighton',
+        'ground': 'the Amex',
+        'name': 'Dean',
+    },
 }
 
 unsupportedTeamMapping = {
@@ -89,11 +94,6 @@ unsupportedTeamMapping = {
     'Crystal Palace FC': {
         'team': 'Palace',
         'ground': 'Selhurst Park',
-        'name': '',
-    },
-    'Brighton & Hove Albion FC': {
-        'team': 'Brighton',
-        'ground': 'the Amex',
         'name': '',
     },
     'Brentford FC': {
