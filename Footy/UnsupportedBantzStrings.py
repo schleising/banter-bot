@@ -127,4 +127,6 @@ teamDrew: list [str] = [
     "Another draw for {team}",
     "Boring old {team}",
     "You should be happy with that result, {name}",
+    "If I could pick one highlight from this game it would be when it finally ended.",
+    "I think {name} will be happy with {team}'s performance today.",
 ]
