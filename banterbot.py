@@ -107,6 +107,13 @@ class BanterBot:
                 update.message.reply_text('Only my master can stop me !!', quote=False)
 
     def add(self, update: Update, context: CallbackContext):
+        print('Current Time')
+        print(datetime.now())
+        print('UTC Time')
+        print(datetime.now(tz=ZoneInfo('UTC')))
+        print('Local Time')
+        print(datetime.now(tz=ZoneInfo('Europe/London')))
+
         # If the user is me
         if update.message.from_user.first_name == 'Stephen' and update.message.from_user.last_name == 'Schleising':
             if update.message.chat_id not in self.chatIdList:
