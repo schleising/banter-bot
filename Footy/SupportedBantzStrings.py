@@ -65,7 +65,7 @@ teamWon: list[str] = [
     "Job done, three points",
     "Another easy win for {team}",
     "Justice !!",
-    "I've got no internet, can someone tell me who won?",
+    "I've got no internet, can someone tell me the score?",
     "What a game, what a club !!",
 ]
 

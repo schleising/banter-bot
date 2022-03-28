@@ -13,12 +13,12 @@ drawing: list[str] = [
     "Boring old {team}",
     "Happy with how it's going, {name}?",
     "Yawn...",
-    "Wankers",
+    "{team} wankers",
     "How can you support this rubbish, {name}?",
     "You get the feeling that {team} don't really want this",
     "No passion from {team}, {name}",
-    "If a game of football is like making love to a beautiful woman, this is a £10 hand job from a swivel-eyed misfit",
-    "This is like a game of chess. But with more players and only one piece",
+    "If a game of football is like making love to a beautiful woman, this {team} game is a £10 hand job from a swivel-eyed misfit",
+    "This {team} match is like a game of chess. But with more players and only one piece",
 ]
 
 teamLeadByOne: list[str] = [
@@ -83,12 +83,12 @@ teamExtendingDeficit: list[str] = [
     "Poor {team}",
     "Whoops...",
     "Oh dear, everything OK, {name}?",
-    "Where'd you get your keeper?\nPOUNDSHOP !! POUNDSHOP !!",
+    "Hey {name}, where'd you get your keeper?\nPOUNDSHOP !! POUNDSHOP !!",
     "{team} can't raise themselves for this game, typical",
     "A team like {team} have such a proud history, but what we see today is just embarrassing",
     "{team} clearly not up for it today",
     "{team} are letting you down, {name}",
-    "It's like watching a bunch of cavemen: Neanderthal",
+    "Watching {team} is like watching a bunch of cavemen: Neanderthal",
 ]
 
 teamLosingDeficit: list[str] = [
@@ -104,7 +104,7 @@ teamWon: list[str] = [
     "That was a shit game",
     "There's no way {team} deserved that",
     "Fuck you, {name} !!",
-    "This will go down in history.\nAs the most tedious game I have ever had the misfortune to witness",
+    "This will go down in history...\nAs the most tedious game I have ever had the misfortune to witness",
 ]
 
 teamLost: list[str] = [
