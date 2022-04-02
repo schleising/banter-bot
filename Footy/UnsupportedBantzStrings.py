@@ -23,7 +23,7 @@ drawing: list[str] = [
 
 teamLeadByOne: list[str] = [
     "{team} cheats, the ref's a cunt",
-    "That was never a goal",
+    "That was never a goal for {team}",
     "{team} don't deserve that",
     "Bollocks",
     "That should go to VAR",
@@ -65,7 +65,7 @@ teamLosingLead: list[str] = [
 ]
 
 teamDeficitOfOne: list[str] = [
-    "This is more like it",
+    "This is more like it from {team}",
     "Oh dear...",
     "{team} wankers",
     "How are you feeling, {name}?",
@@ -123,10 +123,10 @@ teamLost: list[str] = [
 teamDrew: list [str] = [
     "Another uninspiring result for {team}",
     "Thanks for nothing, {team}",
-    "Well that's 90 minutes we won't get back",
+    "Well that's 90 minutes we won't get back, thanks {team}",
     "Another draw for {team}",
     "Boring old {team}",
     "You should be happy with that result, {name}",
-    "If I could pick one highlight from this game it would be when it finally ended.",
+    "If I could pick one highlight from this {team} game it would be when it finally ended.",
     "I think {name} will be happy with {team}'s performance today.",
 ]
