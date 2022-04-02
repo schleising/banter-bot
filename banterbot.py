@@ -137,13 +137,17 @@ class BanterBot:
             for match in self.todaysMatches:
                 print(match)
 
+                # Get a random time offset between 0 and 30 seconds to ensure
+                # the easy win and empty seats messages don't appear all at once
+                timeOffsetSeconds = random.randint(0, 30)
+
                 # Set the context to the supported team name if My Team is not playing, otherwise set it to the opposition
                 teamContext=match.teamName
 
                 # If the match is in the future
                 if (match.matchDate - timedelta(minutes=5)) > datetime.now(ZoneInfo('UTC')):
                     # Add a job to send a message that this should be an easy game 5 minutes before the game starts
-                    self.jq.run_once(self.SendEasyWin, match.matchDate - timedelta(minutes=5), context=teamContext)
+                    self.jq.run_once(self.SendEasyWin, match.matchDate - timedelta(minutes=5, seconds=-timeOffsetSeconds), context=teamContext)
 
                 # Add a job to check the scores once the game starts
                 matchContext = match
@@ -154,7 +158,7 @@ class BanterBot:
                     # If this is a home game for one of the teams we're interested in, add the empty seats message
                     if match.homeTeam in supportedTeamMapping:
                         # Add a job to send the empty seats message 5 minutes after the game starts
-                        self.jq.run_once(self.SendEmptySeats, match.matchDate + timedelta(minutes=5), context=teamContext)
+                        self.jq.run_once(self.SendEmptySeats, match.matchDate + timedelta(minutes=5, seconds=timeOffsetSeconds), context=teamContext)
         else:
             print('Download Failed')
 
