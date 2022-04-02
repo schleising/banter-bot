@@ -64,7 +64,10 @@ class BanterBot:
         # On receipt of a /start command call the start() function and /stop command to call the stop() function
         self.dp.add_handler(CommandHandler('start', self.start))
         self.dp.add_handler(CommandHandler('stop', self.stop))
+
+        # Add chat IDs and list the chat IDs from another chat
         self.dp.add_handler(CommandHandler('add', self.add))
+        self.dp.add_handler(CommandHandler('list', self.list))
 
         # Get the job queue
         self.jq: JobQueue = self.updater.job_queue
@@ -89,13 +92,13 @@ class BanterBot:
         # start_polling() is non-blocking and will stop the bot gracefully.
         self.updater.idle()
 
-    def start(self, update: Update, context: CallbackContext):
+    def start(self, update: Update, context: CallbackContext) -> None:
         # Add the chat ID to the list if it isn't already in there
         if update.message.chat_id not in self.chatIdList:
             self.chatIdList.append(update.message.chat_id)
             print(f'Chat ID {update.message.chat_id} added')
 
-    def stop(self, update: Update, context: CallbackContext):
+    def stop(self, update: Update, context: CallbackContext) -> None:
         # If the user is me
         if update.message.from_user.first_name == 'Stephen' and update.message.from_user.last_name == 'Schleising':
             # If the chat ID is in the list remove it
@@ -106,14 +109,7 @@ class BanterBot:
                 # Otherwise respond rejecting the request to stop me
                 update.message.reply_text('Only my master can stop me !!', quote=False)
 
-    def add(self, update: Update, context: CallbackContext):
-        print('Current Time')
-        print(datetime.now())
-        print('UTC Time')
-        print(datetime.now(tz=ZoneInfo('UTC')))
-        print('Local Time')
-        print(datetime.now(tz=ZoneInfo('Europe/London')))
-
+    def add(self, update: Update, context: CallbackContext) -> None:
         # If the user is me
         if update.message.from_user.first_name == 'Stephen' and update.message.from_user.last_name == 'Schleising':
             # Get the requested date
@@ -121,11 +117,22 @@ class BanterBot:
 
             # Get the requested date if it exists in the command (only accessible by me)
             if len(commands) > 1:
-                chatId = int(commands[1])
+                try:
+                    chatId = int(commands[1])
+                except:
+                    print('Need to enter a single integer only')
+                    update.message.reply_text('Need to enter a single integer only')
+                else:
+                    if chatId not in self.chatIdList:
+                        self.chatIdList.append(chatId)
+                        print(f'Chat ID {chatId} added')
+                        update.message.reply_text(f'Chat ID {chatId} added')
 
-                if chatId not in self.chatIdList:
-                    self.chatIdList.append(chatId)
-                    print(f'Chat ID {chatId} added')
+    def list(self, update: Update, context: CallbackContext) -> None:
+        # If the user is me send back the list of chats the bot is going to send to
+        if update.message.from_user.first_name == 'Stephen' and update.message.from_user.last_name == 'Schleising':
+            print(f'Chat IDs:\n{"\n".join(str(chatId) for chatId in self.chatIdList)}')
+            update.message.reply_text(f'Chat IDs:\n{"\n".join(str(chatId) for chatId in self.chatIdList)}', quote=False)
 
     def MatchUpdateHandler(self, context: CallbackContext) -> None:
         # Call get matches, this allows the function to be called directly
