@@ -251,8 +251,13 @@ class BanterBot:
             # Get the shorter name for this team
             teamName = allTeams[team]['team'] if team in allTeams else team
 
-            # Send the message
-            self.SendMessage(context.bot, f'Should be an easy win for {teamName}')
+            # Send easy win if not supported, tough game if supported
+            if team in supportedTeamMapping:
+                # Send the message
+                self.SendMessage(context.bot, f'Should be an easy win for {teamName}')
+            else:
+                # Send the message
+                self.SendMessage(context.bot, f'{teamName} will probably lose today')
 
     # Log errors
     def error(self, update, context: CallbackContext) -> None:
