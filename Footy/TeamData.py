@@ -23,14 +23,14 @@ supportedTeamMapping = {
         'ground': 'Anfield',
         'name': 'Stevie',
     },
+}
+
+unsupportedTeamMapping = {
     'Brighton & Hove Albion FC': {
         'team': 'Brighton',
         'ground': 'the Amex',
         'name': 'Dean',
     },
-}
-
-unsupportedTeamMapping = {
     'Arsenal FC': {
         'team': 'Arsenal',
         'ground': 'the Emirates',

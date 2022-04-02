@@ -116,9 +116,16 @@ class BanterBot:
 
         # If the user is me
         if update.message.from_user.first_name == 'Stephen' and update.message.from_user.last_name == 'Schleising':
-            if update.message.chat_id not in self.chatIdList:
-                self.chatIdList.append(update.message.chat_id)
-                print(f'Chat ID {update.message.chat_id} added')
+            # Get the requested date
+            commands: list[str] = update.message.text.split(' ')
+
+            # Get the requested date if it exists in the command (only accessible by me)
+            if len(commands) > 1:
+                chatId = int(commands[1])
+
+                if chatId not in self.chatIdList:
+                    self.chatIdList.append(chatId)
+                    print(f'Chat ID {chatId} added')
 
     def MatchUpdateHandler(self, context: CallbackContext) -> None:
         # Call get matches, this allows the function to be called directly
