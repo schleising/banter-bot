@@ -131,8 +131,9 @@ class BanterBot:
     def list(self, update: Update, context: CallbackContext) -> None:
         # If the user is me send back the list of chats the bot is going to send to
         if update.message.from_user.first_name == 'Stephen' and update.message.from_user.last_name == 'Schleising':
-            print(f'Chat IDs:\n{"\n".join(str(chatId) for chatId in self.chatIdList)}')
-            update.message.reply_text(f'Chat IDs:\n{"\n".join(str(chatId) for chatId in self.chatIdList)}', quote=False)
+            chatIds = '\n'.join(str(chatId) for chatId in self.chatIdList)
+            print(f'Chat IDs:\n{chatIds}')
+            update.message.reply_text(f'Chat IDs:\n{chatIds}', quote=False)
 
     def MatchUpdateHandler(self, context: CallbackContext) -> None:
         # Call get matches, this allows the function to be called directly
