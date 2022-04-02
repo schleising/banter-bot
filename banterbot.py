@@ -238,7 +238,7 @@ class BanterBot:
             team = context.job.context
 
             # Get the shorter name for this team
-            teamName = allTeams[team]['name'] if team in allTeams else team
+            teamName = allTeams[team]['team'] if team in allTeams else team
 
             # Send the message
             self.SendMessage(context.bot, f'Should be an easy win for {teamName}')

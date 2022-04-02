@@ -34,8 +34,8 @@ class Match:
         # Get the home and away team names
         self.homeTeam = matchData['homeTeam']['name']
         self.awayTeam = matchData['awayTeam']['name']
-        self.homeTeamShort = allTeams[self.homeTeam]['name'] if self.homeTeam in allTeams else self.homeTeam
-        self.awayTeamShort = allTeams[self.awayTeam]['name'] if self.awayTeam in allTeams else self.awayTeam
+        self.homeTeamShort = allTeams[self.homeTeam]['team'] if self.homeTeam in allTeams else self.homeTeam
+        self.awayTeamShort = allTeams[self.awayTeam]['team'] if self.awayTeam in allTeams else self.awayTeam
 
         # Get the full time score, replacing None with TBD
         self.homeScore = int(matchData['score']['fullTime']['homeTeam']) if matchData['score']['fullTime']['homeTeam'] is not None else 'TBD'
