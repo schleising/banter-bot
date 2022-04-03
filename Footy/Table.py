@@ -93,6 +93,11 @@ class Table:
             teamAEntry = self.Entries[teamA]
             teamBEntry = self.Entries[teamB]
 
+            # Check for the end of the season
+            if teamAEntry.Played == self.MaxGames and teamBEntry.Played == self.MaxGames:
+                # If the season has ended for these two clubs then the position is fixed
+                return teamAEntry.Position < teamBEntry.Position
+
             # Work out how many points team A can get if they win all remaining games
             teamAMaxPoints = teamAEntry.Points + (self.PointsForWin * (self.MaxGames - teamAEntry.Played))
 
@@ -126,17 +131,7 @@ class Table:
         otherTeamList = self._GetOtherTeamList(team)
 
         # If no other team can beat the current one then they have won the leage
-        if not any(self.CanTeamABeatTeamB(otherTeam, team) for otherTeam in otherTeamList):
-            return True
-        else:
-            # Catch the condition where the top teams have finished on equal points
-            if all(entry.Played == self.MaxGames for entry in self.Entries.values()):
-                if self.Entries[team].Position == 1:
-                    return True
-                else:
-                    return False
-            else:
-                return False
+        return not any(self.CanTeamABeatTeamB(otherTeam, team) for otherTeam in otherTeamList)
 
     def HasAnyTeamWonTheLeague(self) -> Optional[str]:
         # Loop through all the teams
