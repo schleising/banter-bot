@@ -99,6 +99,19 @@ class Table:
         else:
             return False
 
+    def CanTeamWinTheLeague(self, team: str) -> bool:
+        # Get a copy of the entries
+        teamList = dict(self.Entries)
+
+        # Remove the current team from the copy of the entries
+        teamList.pop(team)
+
+        # If team can still beat all other teams then it can win the league
+        if all(self.CanTeamABeatTeamB(team, otherTeam) for otherTeam in teamList):
+            return True
+        else:
+            return False
+
     def __str__(self) -> str:
         if self.Entries:
             tableHeader = f'{"Pos":6}{"Team":28}{"Played":>8}{"Won":>6}{"Drawn":>8}{"Lost":>6}{"For":>6}{"Against":>8}{"GD":>6}{"Points":>8}\n'
