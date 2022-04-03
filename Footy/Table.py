@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Any, Dict
+from typing import Any, Optional
 import requests
 
 from Footy import HEADERS
@@ -27,7 +27,7 @@ class Table:
     def __init__(self) -> None:
         # Initialise member variables to safe defaults
         self.Competition: str = 'Error, no competition set'
-        self.Entries: Dict[str, TableEntry] = {}
+        self.Entries: dict[str, TableEntry] = {}
         self.MaxGames = 0
         self.PointsForWin = 3
         self.PointsForDraw = 1
@@ -49,9 +49,11 @@ class Table:
             print(response.content)
             return
 
-    def _ParseTable(self, data: Dict[str, Any]):
+    def _ParseTable(self, data: dict[str, Any]):
+        # Get the competition name
         self.Competition = data['competition']['name']
 
+        # Loop thorugh the json creating an entry for each position
         for entry in data['standings'][0]['table']:
             position = int(entry['position'])
             teamName = str(entry['team']['name'])
@@ -64,6 +66,7 @@ class Table:
             goalsAgainst = int(entry['goalsAgainst'])
             goalDifference = int(entry['goalDifference'])
 
+            # Create the entry
             tableEntry = TableEntry(
                 position,
                 teamName,
@@ -75,10 +78,12 @@ class Table:
                 goalsFor,
                 goalsAgainst,
                 goalDifference
-                )
+            )
 
+            # Add the entry to a dictionary indexed by team name
             self.Entries[teamName] = tableEntry
 
+        # Work out how many games in a season for a team now we have the number of teams in the league
         self.MaxGames = 2 * (len(self.Entries) - 1)
 
     def CanTeamABeatTeamB(self, teamA: str, teamB: str) -> bool:
@@ -99,18 +104,49 @@ class Table:
         else:
             return False
 
-    def CanTeamWinTheLeague(self, team: str) -> bool:
+    def _GetOtherTeamList(self, team: str) -> dict[str, TableEntry]:
         # Get a copy of the entries
-        teamList = dict(self.Entries)
+        otherTeamList = dict(self.Entries)
 
         # Remove the current team from the copy of the entries
-        teamList.pop(team)
+        otherTeamList.pop(team)
+
+        # Return the list of teams minus the current team
+        return otherTeamList
+
+    def CanTeamWinTheLeague(self, team: str) -> bool:
+        # Get a list of the other teams
+        otherTeamList = self._GetOtherTeamList(team)
 
         # If team can still beat all other teams then it can win the league
-        if all(self.CanTeamABeatTeamB(team, otherTeam) for otherTeam in teamList):
+        return all(self.CanTeamABeatTeamB(team, otherTeam) for otherTeam in otherTeamList)
+
+    def HasTeamWonTheLeague(self, team: str) -> bool:
+        # Get a list of the other teams
+        otherTeamList = self._GetOtherTeamList(team)
+
+        # If no other team can beat the current one then they have won the leage
+        if not any(self.CanTeamABeatTeamB(otherTeam, team) for otherTeam in otherTeamList):
             return True
         else:
-            return False
+            # Catch the condition where the top teams have finished on equal points
+            if all(entry.Played == self.MaxGames for entry in self.Entries.values()):
+                if self.Entries[team].Position == 1:
+                    return True
+                else:
+                    return False
+            else:
+                return False
+
+    def HasAnyTeamWonTheLeague(self) -> Optional[str]:
+        # Loop through all the teams
+        for team in self.Entries:
+            # If a team has won the league return that team name
+            if self.HasTeamWonTheLeague(team):
+                return team
+
+        # Return None if no team has won the league
+        return None
 
     def __str__(self) -> str:
         if self.Entries:
