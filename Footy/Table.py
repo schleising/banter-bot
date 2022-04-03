@@ -20,7 +20,7 @@ class TableEntry:
 
     # Format the entry for printing in a table
     def __str__(self) -> str:
-        return f'{self.Position:<6}{self.TeamName:28}{self.Played:8}{self.Won:6}{self.Drawn:8}{self.Lost:6}{self.GoalsFor:6}{self.GoalsAgainst:8}{self.GoalDifference:6}{self.Points:8}'
+        return f'{self.Position:<6}{self.TeamName:28}{self.Played:8}{self.Won:6}{self.Drawn:8}{self.Lost:6}{self.GoalsFor:6}{self.GoalsAgainst:10}{self.GoalDifference:6}{self.Points:8}'
 
 # Class for the full table
 class Table:
@@ -150,7 +150,7 @@ class Table:
 
     def __str__(self) -> str:
         if self.Entries:
-            tableHeader = f'{"Pos":6}{"Team":28}{"Played":>8}{"Won":>6}{"Drawn":>8}{"Lost":>6}{"For":>6}{"Against":>8}{"GD":>6}{"Points":>8}\n'
+            tableHeader = f'{"Pos":6}{"Team":28}{"Played":>8}{"Won":>6}{"Drawn":>8}{"Lost":>6}{"For":>6}{"Against":>10}{"GD":>6}{"Points":>8}\n'
             tableEntries = '\n'.join(str(entry) for entry in self.Entries.values())
             return f'{self.Competition} Table\n{tableHeader}\n{tableEntries}'
         else:
