@@ -102,10 +102,7 @@ class Table:
             teamAMaxPoints = teamAEntry.Points + (self.PointsForWin * (self.MaxGames - teamAEntry.Played))
 
             # If this is greater than or equal to the current number of points team B has, then team A can still beat team B
-            if teamAMaxPoints >= teamBEntry.Points:
-                return True
-            else:
-                return False
+            return teamAMaxPoints >= teamBEntry.Points
         else:
             return False
 
