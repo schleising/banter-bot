@@ -28,6 +28,9 @@ class Table:
         # Initialise member variables to safe defaults
         self.Competition: str = 'Error, no competition set'
         self.Entries: Dict[str, TableEntry] = {}
+        self.MaxGames = 0
+        self.PointsForWin = 3
+        self.PointsForDraw = 1
 
         # Get the table data
         try:
@@ -75,6 +78,26 @@ class Table:
                 )
 
             self.Entries[teamName] = tableEntry
+
+        self.MaxGames = 2 * (len(self.Entries) - 1)
+
+    def CanTeamABeatTeamB(self, teamA: str, teamB: str) -> bool:
+        # Check both teams are in the table
+        if teamA in self.Entries and teamB in self.Entries:
+            # If so get their respective entries
+            teamAEntry = self.Entries[teamA]
+            teamBEntry = self.Entries[teamB]
+
+            # Work out how many points team A can get if they win all remaining games
+            teamAMaxPoints = teamAEntry.Points + (self.PointsForWin * (self.MaxGames - teamAEntry.Played))
+
+            # If this is greater than or equal to the current number of points team B has, then team A can still beat team B
+            if teamAMaxPoints >= teamBEntry.Points:
+                return True
+            else:
+                return False
+        else:
+            return False
 
     def __str__(self) -> str:
         if self.Entries:
