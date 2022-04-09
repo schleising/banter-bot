@@ -105,9 +105,9 @@ class BanterBot:
             if update.message.chat_id in self.chatIdList:
                 self.chatIdList.remove(update.message.chat_id)
                 print(f'Chat ID {update.message.chat_id} removed')
-            else:
-                # Otherwise respond rejecting the request to stop me
-                update.message.reply_text('Only my master can stop me !!', quote=False)
+        else:
+            # Otherwise respond rejecting the request to stop me
+            update.message.reply_text('Only my master can stop me !!', quote=False)
 
     def add(self, update: Update, context: CallbackContext) -> None:
         # If the user is me
