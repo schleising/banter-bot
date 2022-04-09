@@ -3,6 +3,7 @@ from typing import Any, Optional
 import requests
 
 from Footy import HEADERS
+from Footy.TeamData import allTeams
 
 # Class containing a single entry in the table
 @dataclass
@@ -17,6 +18,10 @@ class TableEntry:
     GoalsFor: int
     GoalsAgainst: int
     GoalDifference: int
+
+    @property
+    def condensedEntry(self) -> str:
+        return f'    {self.Position:<4}{allTeams[self.TeamName]["team"]:11}{self.Played:4}{self.Points:4}'
 
     # Format the entry for printing in a table
     def __str__(self) -> str:
@@ -139,6 +144,14 @@ class Table:
 
         # Return None if no team has won the league
         return None
+
+    def GetCondensedTable(self) -> str:
+        if self.Entries:
+            tableHeader = f'    {"Pos":4}{"Team":11}{"Pld":>4}{"Pts":>4}\n'
+            tableEntries = '\n'.join(entry.condensedEntry for entry in self.Entries.values())
+            return f'    {self.Competition} Table\n{tableHeader}\n{tableEntries}'
+        else:
+            return 'Error, cannot print table, no data downloaded'
 
     def __str__(self) -> str:
         if self.Entries:

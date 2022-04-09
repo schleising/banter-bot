@@ -22,3 +22,6 @@ print()
 
 teamWonLeague = table.HasAnyTeamWonTheLeague()
 print(f'{teamWonLeague + " have" if teamWonLeague is not None else "No team has"} won the league')
+
+with open('test.md', 'w', encoding='utf-8') as outputFile:
+    outputFile.write(table.GetCondensedTable())
