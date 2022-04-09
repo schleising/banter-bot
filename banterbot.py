@@ -12,6 +12,7 @@ from telegram import Bot, Update
 from telegram.ext import Updater, JobQueue, CallbackContext, CommandHandler
 
 from Footy.Footy import Footy
+from Footy.Table import Table
 from Footy.Match import Match
 from Footy.TeamData import teamsToWatch, allTeams, supportedTeamMapping
 from Footy.MatchStates import (
@@ -68,6 +69,9 @@ class BanterBot:
         # Add chat IDs and list the chat IDs from another chat
         self.dp.add_handler(CommandHandler('add', self.add))
         self.dp.add_handler(CommandHandler('list', self.list))
+
+        # Add a handler to get the table
+        self.dp.add_handler(CommandHandler('table', self.GetTable))
 
         # Get the job queue
         self.jq: JobQueue = self.updater.job_queue
@@ -134,6 +138,11 @@ class BanterBot:
             chatIds = '\n'.join(str(chatId) for chatId in self.chatIdList)
             print(f'Chat IDs:\n{chatIds}')
             update.message.reply_text(f'Chat IDs:\n{chatIds}', quote=False)
+
+    def GetTable(self, update: Update, context: CallbackContext) -> None:
+        table = Table()
+        print(table.condensedTable)
+        update.message.reply_markdown_v2(table.condensedTable, quote=False)
 
     def MatchUpdateHandler(self, context: CallbackContext) -> None:
         # Call get matches, this allows the function to be called directly

@@ -21,7 +21,7 @@ class TableEntry:
 
     @property
     def condensedEntry(self) -> str:
-        return f'    {self.Position:<4}{allTeams[self.TeamName]["team"]:11}{self.Played:4}{self.Points:4}'
+        return f'{self.Position:<4}{allTeams[self.TeamName]["team"]:11}{self.Played:4}{self.Points:4}'
 
     # Format the entry for printing in a table
     def __str__(self) -> str:
@@ -145,11 +145,13 @@ class Table:
         # Return None if no team has won the league
         return None
 
-    def GetCondensedTable(self) -> str:
+    @property
+    def condensedTable(self) -> str:
         if self.Entries:
-            tableHeader = f'    {"Pos":4}{"Team":11}{"Pld":>4}{"Pts":>4}\n'
+            competition = f'*{self.Competition} Table*'
+            tableHeader = f'{"Pos":4}{"Team":11}{"Pld":>4}{"Pts":>4}\n'
             tableEntries = '\n'.join(entry.condensedEntry for entry in self.Entries.values())
-            return f'    {self.Competition} Table\n{tableHeader}\n{tableEntries}'
+            return f'{competition}\n```\n{tableHeader}\n{tableEntries}\n```'
         else:
             return 'Error, cannot print table, no data downloaded'
 
