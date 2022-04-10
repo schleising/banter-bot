@@ -14,7 +14,7 @@ from telegram.ext import Updater, JobQueue, CallbackContext, CommandHandler
 from Footy.Footy import Footy
 from Footy.Table import Table
 from Footy.Match import Match
-from Footy.TeamData import teamsToWatch, allTeams, supportedTeamMapping
+from Footy.TeamData import teamsToWatch, allTeams, supportedTeamMapping, reverseTeamLookup
 from Footy.MatchStates import (
     Drawing,
     TeamLeadByOne, 
@@ -72,6 +72,9 @@ class BanterBot:
 
         # Add a handler to get the table
         self.dp.add_handler(CommandHandler('table', self.GetTable))
+
+        # Add a handler to answer questions
+        self.dp.add_handler(CommandHandler('can', self.can))
 
         # Get the job queue
         self.jq: JobQueue = self.updater.job_queue
@@ -143,6 +146,60 @@ class BanterBot:
         table = Table()
         print(table.condensedTable)
         update.message.reply_markdown_v2(table.condensedTable, quote=False)
+
+    def can(self, update: Update, context: CallbackContext) -> None:
+        # Log the request
+        print(f'{update.message.from_user.first_name} {update.message.from_user.last_name} in chat {update.message.chat.title} asked {update.message.text}')
+
+        # Get the request
+        request = update.message.text.lower().replace('?', '').split()[1:]
+
+        # Get a table object
+        table = Table()
+
+        # Test for the first team name being in two parts
+        test = ''.join(request[0:2])
+
+        # If the first team name is in two parts join them together and insert that at the start of the
+        # list replacing the original two entries
+        if test in reverseTeamLookup:
+            request.insert(0, ''.join((request.pop(0), request.pop(0))))
+
+        # Match the request
+        match request:
+            # Can team A still beat team B
+            case [teamA, 'beat', *teamB] | [teamA, 'still', 'beat', *teamB]:
+                # If team B is in two parts join them togther
+                teamB = ''.join(teamB)
+                # Ensure both teams are in the lookup table
+                if teamA in reverseTeamLookup and teamB in reverseTeamLookup:
+                    # Check whether team A can beat team B
+                    if table.CanTeamABeatTeamB(reverseTeamLookup[teamA], reverseTeamLookup[teamB]):
+                        response = 'Yes'
+                    else:
+                        response = 'No'
+                else:
+                    # Standard response
+                    response = "Don't ask stupid questions"
+            # Can team still win the league
+            case [team, 'win', 'the', 'league'] | [team, 'still', 'win', 'the', 'league']:
+                # Check the team is in the lookup table
+                if team in reverseTeamLookup:
+                    # Check whether the team can win the league
+                    if table.CanTeamWinTheLeague(reverseTeamLookup[team]):
+                        response = 'Yes'
+                    else:
+                        response = 'No'
+                else:
+                    # Standard response
+                    response = "Don't ask stupid questions"
+            case _:
+                # Standard response
+                response = "Don't ask stupid questions"
+
+        # Log and send the response
+        print(response)
+        update.message.reply_text(response)
 
     def MatchUpdateHandler(self, context: CallbackContext) -> None:
         # Call get matches, this allows the function to be called directly

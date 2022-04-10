@@ -111,3 +111,5 @@ unsupportedTeamMapping = {
 teamsToWatch = myTeamMapping | supportedTeamMapping
 
 allTeams = myTeamMapping | supportedTeamMapping | unsupportedTeamMapping
+
+reverseTeamLookup = {val['team'].replace(' ', '').lower(): key for key, val in allTeams.items()}
