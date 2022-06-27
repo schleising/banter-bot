@@ -106,6 +106,21 @@ unsupportedTeamMapping = {
         'ground': 'the London Stadium',
         'name': '',
     },
+    'Fulham FC': {
+        'team': 'Fulham',
+        'ground': 'Craven Cottage',
+        'name': '',
+    },
+    'AFC Bournemouth FC': {
+        'team': 'Bournemouth',
+        'ground': 'Vitality Stadium',
+        'name': '',
+    },
+    'Nottingham Forest FC': {
+        'team': 'Forest',
+        'ground': 'the Nottingham Forest Football Club',
+        'name': '',
+    },
 }
 
 teamsToWatch = myTeamMapping | supportedTeamMapping
