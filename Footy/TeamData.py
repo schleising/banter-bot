@@ -111,7 +111,7 @@ unsupportedTeamMapping = {
         'ground': 'Craven Cottage',
         'name': '',
     },
-    'AFC Bournemouth FC': {
+    'AFC Bournemouth': {
         'team': 'Bournemouth',
         'ground': 'Vitality Stadium',
         'name': '',
